@@ -1,3 +1,8 @@
+.custom-navbar {
+  background-color: #1c571e; /* Replace with your desired color */
+}
+
+
 .btn-secondary {
   color: #fff !important; }
 
@@ -5,7 +10,7 @@ img {
   width: 100%; }
 
 .logo {
-  width: 80px; }
+  width: 40px; }
 
 .navbar {
   opacity: 0.9;
