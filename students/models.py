@@ -5,7 +5,7 @@ from classrooms.models import Classroom
 
 
 class Student(models.Model):
-    LRN = models.CharField(primary_key=True, max_length=30)
+    LRN = models.IntegerField(primary_key=True)
     last_name = models.CharField(max_length=30)
     first_name = models.CharField(max_length=30)
     middle_name = models.CharField(max_length=30, blank=True, null=True)
@@ -22,7 +22,7 @@ class Student(models.Model):
     sem = models.CharField(max_length=30, null=True,
                            blank=True, default='None', choices=sem_choices)
     classroom = models.ForeignKey(
-        Classroom, null=True, verbose_name="Classrooms", on_delete=models.SET_NULL)
+        Classroom, null=True, verbose_name="Classrooms", on_delete=models.SET_NULL, default=None)
     sex = models.CharField(max_length=10, null=True, choices=sex_choices)
     birth_place = models.CharField(max_length=100, null=True, blank=True)
     mother_tongue = models.CharField(max_length=20, null=True, blank=True)
@@ -139,5 +139,8 @@ class Student(models.Model):
 
     def __str__(self):
         return self.last_name + ' ' + self.first_name
+
+    def full_name(self):
+        return f"{self.last_name}, {self.first_name}"
 
 # Create your models here.
