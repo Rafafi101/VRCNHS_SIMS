@@ -32,7 +32,18 @@
             </li>
         </ul>
 
+
         <ul class="navbar-nav ml-auto">
+            <!-- Search form -->
+            <li class="nav-item mr-3">
+                {% comment %} {% url 'search' %} {% endcomment %}
+                <form class="form-inline my-2 my-lg-0" action="#" method="get">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </li>
+
+            <!-- Register and Login buttons -->
             <li class="nav-item mr-3">
             <a class="nav-link" href="register.html">
                 <i class="fas fa-user-plus"></i> Register</a>
