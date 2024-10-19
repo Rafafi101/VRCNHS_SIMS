@@ -1,5 +1,94 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>SIMS HOME</h1>
+
+<!-- Search Form -->
+<section id="showcase">
+    <div class="container text-center">
+      <div class="home-search">
+        <div class="overlay p-4">
+          <h1 class="display-4 mb-1">
+            Search For Student
+          </h1>
+          <p class="lead">You can use this form to search for any student in Virginia Ramirez </p>
+          <div class="search">
+            {% comment %} <!-- form action removed temporarily {% url 'search' %} --> {% endcomment %}
+            <form action="">
+              <!-- Form Row 1 -->
+              <div class="form-row">
+                <div class="col-md-12 mb-3">
+                  <label class="sr-only">Keywords</label>
+                  <input type="text" name="keywords" class="form-control" placeholder="(Name or LRN)">
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-block" type="submit">Submit form</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<div class='container'>
+
+    {% comment %} CARDS {% endcomment %}
+    <div class="card-container">
+        <!-- Card 1 -->
+        <div class="card card-success">
+        <div class="card-success">
+            <h1 class="dynamic-text"><b>Total Students:</b></h1>
+            <h2 class="dynamic-text">0 {{ total_students }}</h2>
+        </div>
+        </div>
+    
+        <!-- Card 2 -->
+        <div class="card card-success">
+        <div class="card-success">
+            <h1 class="dynamic-text"><b>Total Teachers:</b></h1>
+            <h2 class="dynamic-text">0 {{ total_teachers }}</h2>
+        </div>
+        </div>
+    
+        <!-- Card 3 -->
+        <div class="card card-success">
+        <div class="card-success">
+            <h1 class="dynamic-text-classroom"><b>Total Classrooms:</b></h1>
+            <h2 class="dynamic-text">0 {{ total_classrooms }}</h2>
+        </div>
+        </div>
+    </div>
+    
+    
+
+    <div class="chart-container">
+        <!--<h1>Student Gender Distribution</h1>-->
+        <div class="chart-box">
+        <h2>Gender</h2>
+        <!-- Insert the first Plotly chart -->
+        <p>Generated on: {{ current_datetime }}</p>
+        {{ gender_chart_div|safe }}
+        </div>
+
+        <div class="chart-box">
+        <h2>Religion</h2>
+        <p>Generated on: {{ current_datetime }}</p>
+        {% autoescape off %}
+        <div id="religion_chart">{{ religion_chart|safe }}</div>
+        {% endautoescape %}
+        </div>
+
+
+        <div class="chart-box">
+        <h2>4P's Scholars</h2>
+        <p>Generated on: {{ current_datetime }}</p>
+        {% autoescape off %}
+        <div id="scholarship_chart">{{ scholarship_chart|safe }}</div>
+        {% endautoescape %}
+        </div>
+    </div>
+</div>
+{% comment %} Search Form {% endcomment %}<!-- Showcase -->
+
+
+
 {% endblock %}

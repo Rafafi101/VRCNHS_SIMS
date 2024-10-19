@@ -1,3 +1,483 @@
+/* OLD CSS */
+
+/*#css for the navbar*/
+.bg-success {
+  background-color: #026223!important;
+}
+
+.nav-item:hover>a {
+  transform: scale(1.1);
+}
+
+.user {
+  position: absolute;
+  right: 0;
+  top: 10%;
+  padding-right: 1rem;
+}
+
+.login-bar {
+ margin-left: auto;
+ padding-right: 1rem;
+}
+
+
+
+
+/*-------------------------------Home page-----------------------------------------------------------------*/
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the cards horizontally */
+  align-items: flex-start; /* Align the cards to the top of the container */
+  gap: 20px; /* Add gap between cards */
+  margin: 0 auto; /* Center the entire container */
+  width: 100%; /* Make the container 100% width of the viewport */
+  padding: 20px; /* Optional: Add padding for better visual appearance */
+}
+
+.card {
+  background-color: #f2f2f2;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  flex: 1;
+  width: 30%; /* Adjust the width as needed for larger screens */
+  margin-bottom: 20px; /* Add margin between cards */
+  box-sizing: border-box;
+}
+
+.dynamic-text {
+  font-size: 2rem; /* Set a base font size using relative units */
+}
+.dynamic-text-classroom {
+  font-size: 2rem; /* Adjust font size for smaller screens */
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.card-text {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-success {
+  background-color: #d9ead3;
+  color: #6b8e23;
+  text-align: center; /* Center the text inside the card */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.chart-box {
+  flex: 0 1 100%; /* Set initial size to 100% to make charts stack on top of each other */
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid black;
+  box-sizing: border-box; /* Include padding and border in the box's total width and height */
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* Center the charts horizontally with space around them */
+}
+
+/* Media query for desktop screens */
+@media (min-width: 768px) {
+  .chart-box {
+    flex: 0 1 calc(33.33% - 40px); /* Set initial size to approximately 33.33%, considering margin */
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%; /* Make cards full-width on screens smaller than 768px */
+  }
+
+  .dynamic-text {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+  }
+
+  .dynamic-text-classroom {
+    font-size: 0.85rem; /* Adjust font size for smaller screens */
+  }
+}
+
+/*------------------------------------------------------------------------------------------------*/
+
+
+.asteriskField {
+  display: none;
+}
+
+form.alert ul li {
+  list-style: none;
+}
+
+form .alert ul {
+  padding:0;
+  margin: 0;
+}
+
+
+body {
+    background: #ffffff;
+    height: 100%;
+    margin: 0px 0;
+}
+
+table,
+th,
+td {
+    border: 1px solid rgb(118, 200, 221);
+}
+
+th {
+    background-color: #026223;
+    color: white;
+}
+
+button {
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+
+
+.table-container {
+    width: 90%; /* set your desired width here */
+    overflow-x: auto; /* create a horizontal scrollbar if table is too wide */
+    margin: 0 auto; /* center align the container */
+  }
+
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    padding: 4px; /* adjust to make the table more compact */
+  }
+
+  /*This specific table fix for the classroom table*/
+  .classroom-table th,
+  .classroom-table td {
+    width: 33%; /* Adjust the width as needed */
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 4px; /* adjust to make the table more compact */
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+
+  .form-box {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 15px;
+    margin: 20px 0;
+    background-color: #759b6b;
+    display: inline-block;
+    width: 80%;
+    max-width: 600px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
+/* FOR THE SEARCH BUTTON */
+/* FOR THE SEARCH BUTTON */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 500px; /* Adjust the width as needed */
+}
+
+
+
+
+/* ALIGN THE SEARCH BUTTON AND SEARCH INPUT */
+.search-form {
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.search-input {
+  margin-right: 8px; /* Add margin to separate the input and button */
+}
+
+
+
+/*------------------------------------------------------------------------------------------------*/
+
+
+/* FOR THE FORMS in add_student*/
+
+label {
+  font-weight: 600;
+  color: #666;
+}
+body {
+background: #f1f1f1;
+}
+
+
+.box8{
+box-shadow: 0px 0px 5px 1px #999;
+}
+
+@media (min-width: 768px) {
+  .box8 {
+    max-width: 1200px; /* Limit the width for larger screens */
+    margin: auto; /* Center the form on larger screens */
+  }
+}
+
+
+.mx-t3{
+margin-top: -3rem;
+}
+
+.birthday-input input[type="date"] {
+  /* Add your custom styles here */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  width: 100%;
+  min-height: auto;
+}
+
+#id_address {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  width: 100%;
+  min-height: auto;
+}
+
+
+.messae-text{
+  color: white;
+}
+
+/* For the design of Student Records /*
+/* Styling for the "Show Edited Fields" button */
+.show-edited-button {
+  background-color: #007bff; /* Blue color for the button */
+  color: #fff; /* White text color */
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+/* Styling for the hidden row containing edited fields */
+.edited-row {
+  background-color: #f2f2f2; /* Light gray background color */
+}
+
+/* Styling for the edited fields display box */
+.edited-fields-box {
+  border: 1px solid #ccc; /* Gray border */
+  padding: 10px;
+  background-color: #fff; /* White background */
+}
+
+
+
+.file-upload-wrapper {
+  display: inline-block; /* Makes it behave like a button */
+  width: 80%; /* Adjust width as a percentage for responsiveness */
+  max-width: 500px; /* Set a maximum width if needed */
+  height: 40px; /* Adjust height as needed */
+  padding: 5px; /* Add padding for spacing */
+  cursor: pointer; /* Display pointer cursor on hover */
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+  .file-upload-wrapper {
+    width: 100%; /* Make it full width on smaller screens */
+  }
+}
+
+.table-container #studentTable thead {
+  background-color: #026223;
+  color: white;
+}
+
+/* VIEW STUDENT DETAIL*/
+
+.margin {
+  margin-left: 1rem;
+}
+
+.edit-stud-button {
+  margin:1rem;
+}
+
+.right {
+  float: right;
+  margin: 1rem;
+}
+
+.space {
+  margin: 1rem;
+}
+
+/*Add student manually*/
+
+.gitna {
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.disabled-link {
+  pointer-events: none; /* Disable clicks */
+  opacity: 0.5; /* Add transparency to visually indicate disabled state */
+}
+
+.logo {
+  width: 30%; /* Set the desired percentage width */
+  height: auto; /* Maintain the aspect ratio by setting height to auto */
+}
+
+.card-login {
+  background-color: #f8f9fa; /* Set a background color */
+  padding: 0px; /* Add padding to the card body */
+  margin: 0 auto; /* Center the card horizontally */
+}
+
+/* Set max-width for the form */
+.card-login form {
+  max-width: 400px; /* Adjust the max-width according to your preference */
+  margin: 0 auto; /* Center the form horizontally within the card */
+}
+
+/* Responsive styles */
+@media (max-width: 576px) {
+  /* Adjust styles for screens smaller than 576px (e.g., mobile devices) */
+  .card-login {
+      width: 100%; /* Make the card take the full width */
+  }
+
+  /* Additional styles for better responsiveness on small screens */
+  .card-login form {
+      margin-top: 15px; /* Add some spacing between form and top of the card */
+  }
+
+  .card-login button {
+      margin-top: 15px; /* Add some spacing above the button */
+  }
+}
+
+@media (min-width: 577px) {
+  /* Adjust styles for screens larger than 576px (e.g., tablets and larger) */
+  .card-login {
+      width: 100%; /* Set a percentage width for larger screens */
+  }
+}
+
+.card-container {
+  text-align: center; /* Center the content */
+}
+
+.card {
+  display: inline-block;
+  vertical-align: top; /* Align cards to the top of the container */
+  margin: 10px; /* Add margin between cards */
+}
+
+.card a {
+  text-align: left; /* Align text inside the card to the left */
+}
+
+/* Style for the EXPORT button */
+.export-button {
+        background-color: #f89900;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+        margin: 10px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s; /* Add transition for smooth color change */
+    }
+
+/* Hover effect for the EXPORT button */
+.export-button:hover {
+    background-color: #f1a922; /* Change to your desired hover color */
+}
+
+/* Style for the Bulk Promote button */
+.bulk-promote-button {
+    background-color: #1392c0;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Add transition for smooth color change */
+}
+
+/* Hover effect for the Bulk Promote button */
+.bulk-promote-button:hover {
+    background-color: #127aad; /* Change to your desired hover color */
+}
+
+
+
+/* NEW CSS */
 .custom-navbar {
   background-color: #1c571e; /* Replace with your desired color */
 }
@@ -19,14 +499,21 @@ img {
 .social a {
   margin-right: 0.4rem; }
 
+
+#summary_cards {
+  position:relative;
+  padding-top: 6rem; 
+  min-height: 650px;
+  border-radius: 5px;
+}
 #showcase {
   background: url(../img/showcase.jpg) no-repeat top center fixed/cover;
   position: relative;
-  min-height: 650px;
+  min-height: 300px;
   color: #fff;
-  padding-top: 6rem; }
+  padding-top: 2rem; }
   #showcase .home-search {
-    min-height: 400px;
+    min-height: 300px;
     position: relative;
     border-radius: 5px; }
   #showcase .overlay {
@@ -34,7 +521,7 @@ img {
     position: absolute;
     top: 0;
     left: 0;
-    min-height: 400px;
+    min-height: 300px;
     width: 100%;
     background: rgba(51, 51, 51, 0.8); }
 
