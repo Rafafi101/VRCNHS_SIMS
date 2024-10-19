@@ -5,10 +5,15 @@ from .models import Student
 
 def index(request):
     # # List of students
-    # students = Student.objects.order_by('-list_date')
+    students = Student.objects.order_by('last_name')
+
+    # Setting into the dictionary
+    context = {
+        'students': students,
+    }
 
     # Passing to template
-    return render(request, 'students/students.html')
+    return render(request, 'students/students.html', context)
 
 
 def student(request):

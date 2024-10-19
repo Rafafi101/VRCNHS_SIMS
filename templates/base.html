@@ -1,6 +1,9 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
+{% block head_block %} {% endblock %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +16,9 @@
     <!-- Lightbox -->
     <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
     
-    <title>VRCNHS Students</title>
+    <title>VRCNHS {% block title %}{% endblock %}</title>
+
+    
 </head>
 <body>
 
@@ -27,6 +32,7 @@
     <!-- Footer -->
     {% include 'partials/_footer.html' %}
 
+    
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/lightbox.min.js' %}"></script>
