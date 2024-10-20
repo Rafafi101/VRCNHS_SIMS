@@ -45,7 +45,7 @@ class Student(models.Model):
         max_digits=10, decimal_places=2, null=True, blank=True)
     general_average = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    is_4ps = models.BooleanField(default=True)
+    is_4ps = models.BooleanField(default=False)
     notes = models.CharField(max_length=300, blank=True, null=True)
 
     # GRADE 7 STUDENT HISTORY
