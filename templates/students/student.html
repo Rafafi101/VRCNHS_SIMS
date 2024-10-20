@@ -14,23 +14,21 @@
         <li class="breadcrumb-item">
           <a href="{% url 'students'%}"> Students</a>
         </li>
-        <li class="breadcrumb-item active"> Student</li>
+        <li class="breadcrumb-item active"> Student Profile</li>
       </ol>
     </nav>
   </div>
 </section>
-
-
 <!-- Alerts -->
 {% include 'partials/_alerts.html' %}
 <br>
   <div class="container">
     <form>
       <div class="container ">
-          <div class="row jumbotron box8">
-            <div class="col-sm-12 mt-2 mb-3">
+          <div class="row box8">
+            <div class="col-sm-12 mt-5 mb-6">
               
-              <h1 class="text-center">Student Profile of {{student.full_name}}</h1>
+              <h1 class="text-center">{{student.full_name}}</h1>
               <h4 class="text-center"> LRN: {{student.LRN}}</h4>
               <br>
             </div>
@@ -165,11 +163,14 @@
               <input class="form-control" type="text" value="{{ student.mother_contact }}" aria-label="Disabled input example" disabled readonly>
             </div>
           
-            
-    
             <div class="col-sm-9 form-group">
               <label for="{{ form.address.id_for_label }}">Address:</label>
               <input class="form-control" type="text" value="{{ student.address }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.household_income.id_for_label }}">Household Income*:</label>
+              <input class="form-control" type="text" value="{{ student.household_income }}" aria-label="Disabled input example" disabled readonly>
             </div>
           
             <!-- Performance Metrics -->
@@ -439,20 +440,20 @@
             </div>
             
             <div class="col-sm-3 form-group">
-              <label for="{{ form.is_a_dropout.id_for_label }}">Is a Dropout*:</label>
-              <input class="form-control" type="text" value="{{ student.is_a_dropout }}" aria-label="Disabled input example" disabled readonly>
+              <label for="{{ form.is_dropout.id_for_label }}">Is a Dropout*:</label>
+              <input class="form-control" type="text" value="{{ student.is_dropout }}" aria-label="Disabled input example" disabled readonly>
             </div>
             
             <div class="col-sm-3 form-group">
-              <label for="{{ form.is_a_working_student.id_for_label }}">Is a Working Student*:</label>
-              <input class="form-control" type="text" value="{{ student.is_a_working_student }}" aria-label="Disabled input example" disabled readonly>
+              <label for="{{ form.is_working_student.id_for_label }}">Is a Working Student*:</label>
+              <input class="form-control" type="text" value="{{ student.is_working_student }}" aria-label="Disabled input example" disabled readonly>
             </div>
 
       
             
             <div class="col-sm-3 form-group">
-              <label for="{{ form.is_a_four_ps_scholar.id_for_label }}">Is a 4P's Scholar*:</label>
-              <input class="form-control" type="text" value="{{ student.is_a_four_ps_scholar }}" aria-label="Disabled input example" disabled readonly>
+              <label for="{{ form.is_4ps.id_for_label }}">Is a 4P's Scholar*:</label>
+              <input class="form-control" type="text" value="{{ student.is_4ps }}" aria-label="Disabled input example" disabled readonly>
             </div>
     
                   <!-- New Notes Field -->
@@ -465,7 +466,7 @@
             <div class="col-sm-12 form-group mb-0">
               <hr>
               {% comment %} {% url 'edit_student' lrn=student.LRN %} {% endcomment %}
-              <a href="#" class="btn btn-primary edit-stud-button">Edit</a>
+              <a href="{% url 'edit_student' lrn=student.LRN %}" class="btn btn-primary edit-stud-button">Edit</a>
               <button type="button" class="btn btn-danger right" data-bs-toggle="modal" data-bs-target="#delStudentModal">Delete</button>
               <!-- Delete Modal -->
               <div class="modal fade" id="delStudentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
