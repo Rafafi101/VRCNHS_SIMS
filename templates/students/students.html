@@ -70,7 +70,7 @@
     </div>
     <br>
     <section>
-        <div class="card-container">
+        <div class="card-container ">
             <!-- Card 1 -->
             <div class="card">
                 <h1 class="dynamic-text"><b>Create Student</b></h1>
@@ -94,6 +94,7 @@
                 <form method="post" enctype="multipart/form-data" action="#">
                     {% csrf_token %}
                     <div class="custom-file">
+                        
                         <input type="file" class="custom-file-input" id="customFile" name="myfile" required>
                         <div>
                             <label class="custom-file-label" for="customFile">Choose file</label>

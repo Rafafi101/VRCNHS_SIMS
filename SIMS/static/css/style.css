@@ -21,8 +21,12 @@
  padding-right: 1rem;
 }
 
-
-
+.card-students  {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content : space-between;
+}
 
 /*-------------------------------Home page-----------------------------------------------------------------*/
 .card-container {
@@ -431,11 +435,17 @@ margin-top: -3rem;
   text-align: center; /* Center the content */
 }
 
+.custom-file-label {
+  text-align: left;
+}
+
 .card {
   display: inline-block;
   vertical-align: top; /* Align cards to the top of the container */
   margin: 10px; /* Add margin between cards */
 }
+
+
 
 .card a {
   text-align: left; /* Align text inside the card to the left */
