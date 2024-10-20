@@ -51,7 +51,7 @@
                             </td>
                             <td>{{ student.status }}</td>
                             <td>{{ student.age }}</td>
-                            <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
+                            <td>{{ student.classroom.gradelevel }} {{ student.classroom }}</td>
                             <td>{{ student.general_average }}</td>
                             <td>
                                 <a href="{% url 'student' student.LRN %}" class="btn btn-primary view-button">

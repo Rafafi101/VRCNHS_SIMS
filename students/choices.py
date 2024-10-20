@@ -54,8 +54,3 @@ household_income_choices = {
     ('from Php 9,000 - Php 18,000', 'from Php 9,000 - Php 18,000'),
     ('below Php 9,000', 'below Php 9,000'),
 }
-
-is_returnee_choices = (
-    ('Yes', 'Yes'),
-    ('No', 'No')
-)

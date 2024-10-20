@@ -1,4 +1,4 @@
-from .choices import status_choices, religion_choices, strand_choices, sem_choices, sex_choices, transfer_status_choices, household_income_choices, is_returnee_choices
+from .choices import status_choices, religion_choices, strand_choices, sem_choices, sex_choices, transfer_status_choices, household_income_choices
 from datetime import date
 from django.db import models
 from classrooms.models import Classroom
@@ -37,10 +37,9 @@ class Student(models.Model):
         max_length=15, null=True, blank=True, default='Regular', choices=transfer_status_choices)
     household_income = models.CharField(
         max_length=30, null=True, blank=True, choices=household_income_choices)
-    is_returnee = models.CharField(
-        max_length=5, null=True, blank=True, choices=is_returnee_choices)
-    is_dropout = models.BooleanField(default=True)
-    is_working_student = models.BooleanField(default=True)
+    is_returnee = models.BooleanField(default=False)
+    is_dropout = models.BooleanField(default=False)
+    is_working_student = models.BooleanField(default=False)
     health_bmi = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
     general_average = models.DecimalField(
