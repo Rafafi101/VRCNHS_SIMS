@@ -8,25 +8,27 @@
 
 <!-- Alerts -->
 {% include 'partials/_alerts.html' %}
-
+<br>
   <div class="container">
     <form>
-      <div class="container">
+      <div class="container ">
           <div class="row jumbotron box8">
-            <div class="col-sm-12 mt-3 mb-4 card-header">
+            <div class="col-sm-12 mt-2 mb-3">
               {% comment %} 
               USE BREADCRUMN instead
               <div class='margin'>
                   <a href="{% url 'back_student_detail' %}" class="btn btn-primary">Back</a>
               </div>
                 {% endcomment %}
-              <h2 class="text-center">Student Profile</h2>
+              <h1 class="text-center">Student Profile:</h1>
+              <h2 class="text-center"> {{student.full_name}}</h2>
+              <h3 class="text-center"> (LRN: {{student.LRN}})</h3>
               <br>
             </div>
             
             <!-- PERSONAL DETAILS -->
             <div class="col-sm-12 mx-t5 mb-2">
-              <h4>Personal Details</h4>
+              <h3>Personal Details</h3>
               <hr>
             </div>
             
@@ -54,11 +56,7 @@
               <label for="{{ form.status.id_for_label }}">Status:</label>
               <input class="form-control" type="text" value="{{ student.status }}" aria-label="Disabled input example" disabled readonly>
            </div>
-    
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.LRN.id_for_label }}">LRN:</label>
-              <input class="form-control" type="text" value="{{ student.LRN }}" aria-label="Disabled input example" disabled readonly>
-            </div>
+
             
             <div class="col-sm-3 form-group">
               <label for="{{ form.birthday.id_for_label }}">Birthday:</label>
@@ -146,7 +144,7 @@
               <input class="form-control" type="text" value="{{ student.guardian_contact }}" aria-label="Disabled input example" disabled readonly>
             </div>
     
-            <div class="col-sm-12 form-group">
+            <div class="col-sm-9 form-group">
               <label for="{{ form.address.id_for_label }}">Address:</label>
               <input class="form-control" type="text" value="{{ student.address }}" aria-label="Disabled input example" disabled readonly>
             </div>
@@ -470,5 +468,7 @@
         </form>
       </div>
     </div>
+</section>
+<br>
 {% endblock %}
 
