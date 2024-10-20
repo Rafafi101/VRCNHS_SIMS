@@ -23,6 +23,8 @@
 </section>
 <div class='container'>
     <!-- MESSAGES -->
+    {% comment %} Alerts {% endcomment %}
+    {% include 'partials/_alerts.html' %}
     <br>
     <!-- STUDENTS -->
     <div class='table-responsive'>
@@ -53,7 +55,7 @@
                             <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
                             <td>{{ student.general_average }}</td>
                             <td>
-                                <a href="#" class="btn btn-primary view-button">
+                                <a href="{% url 'student' student.LRN %}" class="btn btn-primary view-button">
                                     View Profile
                                 </a>
                             </td>
