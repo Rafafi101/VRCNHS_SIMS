@@ -77,8 +77,7 @@
                 <h1 class="dynamic-text"><b>Create Student</b></h1>
                 <h6>You may manually add a student here.</h6>
                 <br>
-                {% comment %} {% url 'add_student' %} {% endcomment %}
-                <form action="#" method="get">
+                <form action="{% url 'add_student' %}" method="get">
                     <button type="submit" class="btn btn-primary">
                         Add Student
                     </button>

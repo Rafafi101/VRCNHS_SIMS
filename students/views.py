@@ -1,9 +1,10 @@
 from django.forms import model_to_dict
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.shortcuts import get_object_or_404, render
 from django.contrib import messages
 
-from .forms import StudentForm
+from .forms import AdminTeacherStudentForm, EditStudentForm, AddStudentForm
 from .models import Student
 from teachers.models import Teacher
 from classrooms.models import Classroom
@@ -70,8 +71,8 @@ def edit_student(request, lrn):
 
     if request.method == 'POST':
         # Pass teacher and is_admin to the form
-        form = StudentForm(request.POST, instance=student,
-                           teacher=teacher, is_admin=is_admin)
+        form = EditStudentForm(request.POST, instance=student,
+                               teacher=teacher, is_admin=is_admin)
         if form.is_valid():
             edited_fields = []  # Create a list to store edited fields and their previous values
             for field_name, new_value in form.cleaned_data.items():
@@ -94,10 +95,31 @@ def edit_student(request, lrn):
 
     else:
         # Pass teacher and is_admin to the form for GET requests
-        form = StudentForm(
+        form = EditStudentForm(
             instance=student, teacher=teacher, is_admin=is_admin)
         # Preserve initial value for sex field
         form.fields['sex'].initial = student.sex
 
     context = {'form': form, 'student': student}
     return render(request, 'students/edit_student.html', context)
+
+# RETURN once( )
+
+
+def add_student(request):
+    # Base Add_student
+    if request.method == 'POST':
+        form = AddStudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Student Added Successfully")
+            return redirect("students")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Error in {
+                                   form[field].label}: {error}")
+    else:
+        form = AddStudentForm()
+
+    return render(request, 'students/add_student.html', {'form': form})

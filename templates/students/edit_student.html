@@ -108,9 +108,12 @@
 
         <div class="col-sm-3 form-group">
           <label for="{{ form.birthday.id_for_label }}">Birthday:</label>
-          <input type="date" id="{{ form.birthday.id_for_label }}" name="{{ form.birthday.html_name }}" value="{{ form.instance.birthday|date:'Y-m-d' }}">
+          <div class="birthday-input">
+            <input type="date" id="{{ form.birthday.id_for_label }}" name="{{ form.birthday.html_name }}" value="{{ form.instance.birthday|date:'Y-m-d' }}">
+          </div>
           {{ form.birthday.errors }}
         </div>
+
         <div class="col-sm-3 form-group">
           <label for="{{ form.birth_place.id_for_label }}">Birth Place:</label>
           {{ form.birth_place }}

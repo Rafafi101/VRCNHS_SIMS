@@ -19,3 +19,13 @@ $.getScript("https://code.jquery.com/jquery-3.6.4.min.js", function() {
         });
     });
 });
+
+
+$(document).ready(function() {
+$('#datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+});
+});
+
