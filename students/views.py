@@ -57,37 +57,47 @@ def student(request, lrn):
 def edit_student(request, lrn):
     student = get_object_or_404(Student, LRN=lrn)
     initial_data = model_to_dict(student)  # Store initial data for comparison
+
+    is_admin = request.user.groups.filter(name='ADMIN').exists()
+    teacher = None
+    if not is_admin:
+        try:
+            teacher = Teacher.objects.get(user=request.user)
+        except Teacher.DoesNotExist:
+            messages.error(
+                request, "You are not authorized to edit this student's profile.")
+            return redirect('students')
+
     if request.method == 'POST':
-        form = StudentForm(request.POST, instance=student)
+        # Pass teacher and is_admin to the form
+        form = StudentForm(request.POST, instance=student,
+                           teacher=teacher, is_admin=is_admin)
         if form.is_valid():
             edited_fields = []  # Create a list to store edited fields and their previous values
-
-            # Compare the new data with the initial data to detect edits
             for field_name, new_value in form.cleaned_data.items():
-                if initial_data[field_name] != new_value:
-                    previous_value = initial_data[field_name]
+                if initial_data.get(field_name) != new_value:
+                    previous_value = initial_data.get(field_name)
                     field_verbose_name = Student._meta.get_field(
                         field_name).verbose_name
                     edited_fields.append(
                         f"{field_verbose_name} (before: {previous_value})")
 
-            # Store edited fields in the student object
             student.edited_fields = ', '.join(edited_fields)
-            student.save()
-
-            form.save()
+            form.save()  # Save the updated student instance
             messages.success(request, "Student Updated Successfully")
+            # Redirect after successful update
+            return redirect("student", lrn=lrn)
+        else:
+            print(form.errors)  # Print form errors in the console for debugging
+            messages.error(
+                request, "There was an issue with the form. Please check the errors.")
 
-            if request.user.groups.filter(name='TEACHER').exists():
-                return redirect("student", lrn=lrn)
-            else:
-                return redirect("student", lrn=lrn)
     else:
-        # Create the form instance without providing initial values
-        form = StudentForm(instance=student)
-
-        # Manually set the initial value for the 'sex' field
+        # Pass teacher and is_admin to the form for GET requests
+        form = StudentForm(
+            instance=student, teacher=teacher, is_admin=is_admin)
+        # Preserve initial value for sex field
         form.fields['sex'].initial = student.sex
-    context = {'form': form, 'student': student}
 
+    context = {'form': form, 'student': student}
     return render(request, 'students/edit_student.html', context)
