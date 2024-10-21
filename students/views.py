@@ -123,3 +123,18 @@ def add_student(request):
         form = AddStudentForm()
 
     return render(request, 'students/add_student.html', {'form': form})
+
+
+def delete_student(request, lrn):
+    student = Student.objects.get(LRN=lrn)
+    student.delete()
+    # Set extra_tags to 'danger' for red color
+    messages.error(request, "Student Deleted", extra_tags='danger')
+
+    # # Check if the user belongs to the "TEACHER" group
+    # if request.user.groups.filter(name='TEACHER').exists():
+    #     # Redirect to "user_page" if the user is a teacher
+    #     return redirect("user_page")
+    # else:
+    # Redirect to "students" if the user is not a teacher
+    return redirect("students")
