@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} | Search Results {% endblock title %}
+
+{% block head_block %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- page head-->
+<section id="showcase-inner" class="py-2 text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-12">
+                {% comment %} <form action="{% url 'search_student' %}">
+                    <!-- Form Row 1 -->
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                        <input type="text" name="query_student" class="form-control" placeholder="(Name or LRN)">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-block" type="submit">Submit form</button>
+                </form> {% endcomment %}
+                <div class="overlay p-4">
+                    <div class="search">
+                        <h1 class="display-4">Search Results</h1>
+                        <form action="{% url 'search_student' %}" class="d-flex w-100">
+                            <div class="flex-grow-1">
+                                <input type="text" name="query_student" class="form-control home-input-search" placeholder="(Name or LRN)" value="{{ values.query_student }}" >
+                            </div>
+                            <div class="flex-shrink-0 ms-2">
+                                <button class="btn btn-primary search-button-home" type="submit-search">Submit form</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% comment %} Table of students {% endcomment %}
+<div class='container'>
+    <!-- MESSAGES -->
+    {% comment %} Alerts {% endcomment %}
+    {% include 'partials/_alerts.html' %}
+    <br>
+    <!-- STUDENTS -->
+    <div class='table-responsive'>
+        <table id="studentTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>LRN</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Age</th>
+                    <th>Grade & Section</th>
+                    <th>General Average</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if students %}
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ student.LRN }}</td>
+                            <td>{{ student.last_name }}
+                                {% if student.suffix_name %} {{ student.suffix_name }}{% endif %}
+                                {% if student.first_name %}, {{ student.first_name }}{% endif %}
+                                {% if student.middle_name %} {{ student.middle_name }}{% endif %}
+                            </td>
+                            <td>{{ student.status }}</td>
+                            <td>{{ student.age }}</td>
+                            <td>{{ student.classroom.gradelevel }} {{ student.classroom }}</td>
+                            <td>{{ student.general_average }}</td>
+                            <td>
+                                <a href="{% url 'student' student.LRN %}" class="btn btn-primary view-button">
+                                    View Profile
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No Students in the Database</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+   
+</div>
+{% endblock %}

@@ -201,11 +201,22 @@ label {
     font-weight: bold;
 }
 
+.home-input-search {
+  height: 45px; /* Match the default height of .form-control */
+}
+
+.search-button-home {
+  height: 40x; /* Match the input field height */
+  padding: 0 2rem; /* Adjust padding as necessary */
+  margin-left: 8px; /* Add a small gap between the input and button */
+}
+
+
+
 input[type="text"],
 input[type="email"],
 input[type="number"],
 select {
-    width: 100%;
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -220,6 +231,14 @@ button[type="submit"] {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+button[type="submit-search"] {
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 
@@ -523,21 +542,34 @@ img {
 #showcase {
   background: url(../img/showcase.jpg) no-repeat top center fixed/cover;
   position: relative;
-  min-height: 300px;
+  min-height: 100px;
   color: #fff;
   padding-top: 2rem; }
   #showcase .home-search {
-    min-height: 300px;
+    min-height: 250px;
     position: relative;
-    border-radius: 5px; }
+    border-radius: 3px; }
   #showcase .overlay {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    min-height: 300px;
+    min-height: 200px;
     width: 100%;
     background: rgba(51, 51, 51, 0.8); }
+
+#box-search {
+  content: '';
+  position: relative;
+  top: 0;
+  left: 0;
+  min-height: 80px;
+  width: 100%;
+  background: rgba(51, 51, 51, 0.8); 
+  position: relative;
+  color: #fff;
+  padding-top: 1rem; }
+
 
 #services {
   background: url(../img/building.jpg) no-repeat top center fixed/cover;

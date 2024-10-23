@@ -3,12 +3,13 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.shortcuts import get_object_or_404, render
 from django.contrib import messages
+from django.contrib.auth.models import User, Group
+from django.db.models import Q
 
 from .forms import AdminTeacherStudentForm, EditStudentForm, AddStudentForm
 from .models import Student
 from teachers.models import Teacher
 from classrooms.models import Classroom
-from django.contrib.auth.models import User, Group
 
 
 def index(request):
@@ -123,6 +124,24 @@ def add_student(request):
         form = AddStudentForm()
 
     return render(request, 'students/add_student.html', {'form': form})
+
+
+def search_student(request):
+    students_list = Student.objects.order_by('last_name', 'first_name')
+
+    if 'query_student' in request.GET:
+        query_student = request.GET['query_student']
+        if query_student:
+            students_list = students_list.filter(
+                Q(LRN__icontains=query_student) |
+                Q(last_name__icontains=query_student) |
+                Q(first_name__icontains=query_student) |
+                Q(middle_name__icontains=query_student)
+            )
+    context = {'students': students_list,
+               'values': request.GET}
+
+    return render(request, 'students/search_student.html', context)
 
 
 def delete_student(request, lrn):

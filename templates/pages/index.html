@@ -9,30 +9,25 @@
 
 <!-- Search Form -->
 <section id="showcase">
-    <div class="container text-center">
-      <div class="home-search">
+  <div class="container text-center">
+     <div class="home-search">
         <div class="overlay p-4">
-          <h1 class="display-4 mb-1">
-            Search For Student
-          </h1>
-          <p class="lead">You can use this form to search for any student in Virginia Ramirez </p>
-          <div class="search">
-            {% comment %} <!-- form action removed temporarily {% url 'search' %} --> {% endcomment %}
-            <form action="">
-              <!-- Form Row 1 -->
-              <div class="form-row">
-                <div class="col-md-12 mb-3">
-                  <label class="sr-only">Keywords</label>
-                  <input type="text" name="keywords" class="form-control" placeholder="(Name or LRN)">
-                </div>
-              </div>
-              <button class="btn btn-secondary btn-block" type="submit">Submit form</button>
-            </form>
-          </div>
+           <h1 class="display-4 mb-1">Search For Student</h1>
+           <p class="lead">You can use this form to search for any student in Virginia Ramirez</p>
+           <div class="search">
+              <form action="{% url 'search_student' %}" class="d-flex w-100">
+                 <div class="flex-grow-1">
+                    <input type="text" name="query_student" class="form-control home-input-search" placeholder="(Name or LRN)">
+                 </div>
+                 <div class="flex-shrink-0 ms-2">
+                    <button class="btn btn-secondary search-button-home" type="submit">Search</button>
+                 </div>
+              </form>
+           </div>
         </div>
-      </div>
-    </div>
-  </section>
+     </div>
+  </div>
+</section>
 
 <div class='container'>
 

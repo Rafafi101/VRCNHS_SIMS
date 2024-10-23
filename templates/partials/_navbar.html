@@ -22,11 +22,11 @@
             </li>
 
             <li 
-                {% if '/students/' == request.path %}
-                    class="nav-item active mr-3"
-                {% else %}
-                    class="nav-item mr-3"
-                {% endif %} 
+            {% if '/students/' == request.path %}
+                class="nav-item active mr-3"
+            {% else %}
+                class="nav-item mr-3"
+            {% endif %} 
             >
             <a class="nav-link" href="{% url 'students' %}">Students</a>
             </li>
@@ -35,13 +35,15 @@
 
         <ul class="navbar-nav ml-auto">
             <!-- Search form -->
-            <li class="nav-item mr-3">
-                {% comment %} {% url 'search' %} {% endcomment %}
-                <form class="form-inline my-2 my-lg-0" action="#" method="get">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
-                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </li>
+            {% if '/students/' == request.path %}
+                <li class="nav-item mr-3">
+                    {% comment %}  {% endcomment %}
+                    <form class="form-inline my-2 my-lg-0" action="{% url 'search_student' %}" method="get">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query_student" value="{{ values.query_student }}" >
+                        <button class="btn btn-primary search-button-home" type="submit-search">Search</button>
+                    </form>
+                </li>
+            {% endif %}
 
             <!-- Register and Login buttons -->
             <li class="nav-item mr-3">
