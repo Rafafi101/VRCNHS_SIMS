@@ -5,6 +5,6 @@ from django.dispatch import receiver
 
 @receiver(post_migrate)
 def create_default_groups(sender, **kwargs):
-    if sender.name == 'yourappname':  # Replace 'yourappname' with the actual name of your app
+    if sender.name == 'accounts':
         Group.objects.get_or_create(name='ADMIN')
         Group.objects.get_or_create(name='TEACHER')

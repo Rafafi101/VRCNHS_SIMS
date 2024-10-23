@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from students.models import Student
-from teachers.models import Teacher
+from accounts.models import Teacher
 from classrooms.models import Classroom
 from django.db.models import Count, Q
 from plotly.io import to_html as pio_to_html

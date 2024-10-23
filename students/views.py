@@ -8,7 +8,7 @@ from django.db.models import Q
 
 from .forms import AdminTeacherStudentForm, EditStudentForm, AddStudentForm
 from .models import Student
-from teachers.models import Teacher
+from accounts.models import Teacher
 from classrooms.models import Classroom
 
 

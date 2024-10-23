@@ -1,6 +1,6 @@
 from .choices import grade_choices
 from django.db import models
-from teachers.models import Teacher
+from accounts.models import Teacher
 
 # Create your models here.
 
