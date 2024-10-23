@@ -6,10 +6,11 @@ from accounts.models import Teacher
 
 
 class Gradelevel(models.Model):
-    grade = models.CharField(max_length=20, choices=grade_choices, unique=True)
+    gradelevel = models.CharField(
+        max_length=20, choices=grade_choices, unique=True, default=None)
 
     def __str__(self):
-        return self.grade
+        return self.gradelevel
 
 
 class Classroom(models.Model):

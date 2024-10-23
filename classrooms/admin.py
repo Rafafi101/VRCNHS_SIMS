@@ -4,11 +4,11 @@ from .models import Classroom, Gradelevel
 
 
 class ClassroomAdmin(admin.ModelAdmin):
-    list_display = ('gradelevel', 'classroom', 'teacher')
+    list_display = ('classroom', 'gradelevel', 'teacher')
 
 
 class GradelevelAdmin(admin.ModelAdmin):
-    list_display = ('grade', )
+    list_display = ('gradelevel', )
 
 
 admin.site.register(Gradelevel, GradelevelAdmin)
