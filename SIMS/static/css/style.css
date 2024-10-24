@@ -1,5 +1,41 @@
 /* OLD CSS */
 
+
+#login-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+.custom-login-btn {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-login-btn::before {
+    content: "Login";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+}
+
+.custom-login-btn::before::before {
+    content: "\f2f6"; /* FontAwesome Unicode */
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    margin-right: 8px;
+}
+
+.logo-login {
+  width: 150px; /* Adjust width as necessary */
+  height: auto;  /* Keeps the aspect ratio */
+}
+
+
 /*#css for the navbar*/
 .bg-success {
   background-color: #026223!important;
@@ -217,7 +253,8 @@ input[type="text"],
 input[type="email"],
 input[type="number"],
 select {
-    padding: 8px;
+    width:100%;
+    padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;

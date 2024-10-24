@@ -37,7 +37,7 @@ def register(request):
             return redirect('register')
 
     else:
-        return render(request, 'teachers/register.html')
+        return render(request, 'accounts/register.html')
 
 
 def login(request):
@@ -51,17 +51,17 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             messages.success(request, 'You are now logged in')
-            return redirect('dashboard')
+            return redirect('index')
         else:
             messages.error(request, 'Invalid credentials')
             return redirect('login')
 
     else:
-        return render(request, 'teachers/login.html')
+        return render(request, 'accounts/login.html')
 
 
 def logout(request):
     if request.method == 'POST':
         auth.logout(request)
         messages.success(request, 'You are now logged out')
-    return redirect('index')
+    return redirect('login')

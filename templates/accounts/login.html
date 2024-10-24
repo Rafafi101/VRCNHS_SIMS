@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} | Login {% endblock title %}
+
+
+{% block content %}
+<section id="login-section">
+    <div class="container">
+        <div>
+            <div class="d-flex justify-content-center align-items-center vh-100">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <img src="{% static 'img/logo.png' %}" class="logo-login" alt="login" />
+                        <h5>Student Information System</h5>
+                    </div>                                     
+                    <div class="card-body">
+                        {% include 'partials/_alerts.html' %}
+                        <form action="{% url 'login' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-block d-flex justify-content-center align-items-center">
+                                <i class="fas fa-sign-in-alt mr-2"></i> Login
+                            </button>                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
