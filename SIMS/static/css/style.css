@@ -247,9 +247,29 @@ label {
   margin-left: 8px; /* Add a small gap between the input and button */
 }
 
+/* Styles for Teacher Registration Card */
+.card-register {
+  width: 500px; /* Adjust this width as needed */
+  max-width: 90%; /* Ensures it doesn't exceed screen width on smaller screens */
+  margin: 0 auto; /* Centers the card */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adds a soft shadow for depth */
+  border-radius: 8px; /* Smooth corners */
+}
 
+/* Style the error list */
+ul.errorlist {
+  color: red; /* Set the error text color to red */
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove padding */
+}
+
+ul.errorlist li {
+  font-weight: bold; /* Optional: make the text bold for visibility */
+}
 
 input[type="text"],
+input[type="password"],
+input[type="date"],
 input[type="email"],
 input[type="number"],
 select {

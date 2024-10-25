@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
+from .forms import TeacherRegistrationForm
 # Create your views here.
 
 
@@ -38,6 +39,23 @@ def register(request):
 
     else:
         return render(request, 'accounts/register.html')
+
+
+def teacher_register(request):
+    if request.method == 'POST':
+        form = TeacherRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "User registration was successful!")
+            # Redirect to login page after successful registration
+            return redirect('login')
+        else:
+            # If form is invalid, show an error message
+            messages.error(
+                request, "There was an error in the form. Please correct the fields highlighted in red.")
+    else:
+        form = TeacherRegistrationForm()
+    return render(request, 'accounts/register.html', {'form': form})
 
 
 def login(request):

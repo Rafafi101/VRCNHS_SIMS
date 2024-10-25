@@ -3,7 +3,7 @@ document.querySelector('.year').innerHTML = date.getFullYear();
 
 setTimeout(function() {
     $('#message').fadeOut('slow');
-}, 5000);
+}, 10000);
 
 // Add jQuery and DataTables scripts to main.js
 $.getScript("https://code.jquery.com/jquery-3.6.4.min.js", function() {

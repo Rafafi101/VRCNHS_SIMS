@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_bootstrap4',
+    'captcha',
 
 ]
 
@@ -146,3 +147,7 @@ MESSAGE_TAGS = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# settings.py
+RECAPTCHA_PUBLIC_KEY = 'django-insecure-n1r+hq8164bez_51knr+168^ycl@#wh9wfbx2n2_l1m2fmfyci'
+RECAPTCHA_PRIVATE_KEY = 'django-insecure-n1r+hq8164bez_51knr+168^ycl@#wh9wfbx2n2_l1m2fmfyciy'
