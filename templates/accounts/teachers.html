@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} | Teachers {% endblock title %}
+
+{% block content %}
+
+
+<div class="table-container">  
+    <table class="table" id="teacherTable">
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Account Type</th>
+                <th>Position</th>
+                <th>Grade & Section</th>
+                <th>ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for teacher in teachers %}
+            <tr>
+                <td>{{ teacher.employee_id }}</td>
+                <td>{{ teacher.last_name }}, {{ teacher.first_name }} </td>
+                <td>{{ teacher.user.username }}</td>
+                <td>
+                  {% for group in teacher.user.groups.all %}
+                    {{ group }}
+                    {% if not forloop.last %}/{% endif %}
+                  {% endfor %}
+                </td>
+                <td>{{ teacher.rank }}</td>
+                <td>
+                  {% with classrooms=teacher.classroom_set.all %}
+                        {% if classrooms %}
+                            ({{ classrooms.0.gradelevel.grade }}) 
+                        {% endif %}
+                  {% endwith %}
+                  {% with classrooms=teacher.classroom_set.all %}
+                      {% if classrooms %}
+                          {{ classrooms.0.classroom }}
+                      {% endif %}
+                  {% endwith %}
+                </td>
+                <td class="d-flex">
+                  <div class="col-6">
+                    <button type="button" class="btn btn-primary view-button margin" data-bs-toggle="modal" data-bs-target="#teacherModal{{ teacher.id }}">
+                      VIEW
+                    </button>
+                  </div>
+                  <div class="col-6">
+                    <button type="button" class="btn btn-success edit-teacher margin" onclick="editTeacher('{{ teacher.id }}')">
+                      EDIT
+                    </button>
+                  </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% for teacher in teachers %}
+<!-- Modal - Teacher Profile -->
+<div class="modal fade" id="teacherModal{{ teacher.id }}" tabindex="-1" aria-labelledby="teacherModalLabel{{ teacher.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="teacherModalLabel{{ teacher.id }}">Teacher Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-section">
+          <h4>Teacher Information</h4>
+          <p><strong>Name:</strong> {{ teacher.first_name }} {{ teacher.last_name }} {{ teacher.middle_name }} </p>
+          <p><strong>Rank:</strong> {{ teacher.rank }}</p>
+          <p><strong>Group:</strong>                   
+            {% for group in teacher.user.groups.all %}
+              {{ group }}
+              {% if not forloop.last %}/{% endif %}
+            {% endfor %}</p>
+          <p><strong>Birthday:</strong> {{ teacher.birthday }}</p>
+          <p><strong>Appointment Date:</strong> {{ teacher.appt_date }}</p>
+          <!-- Add more teacher profile data as needed -->
+        </div>
+        
+        <!-- Add more sections for other teacher details -->
+        
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+ <!-- Add DataTables JS -->
+ <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<br>
+<script>
+
+  function editTeacher(teacherId) {
+      {% comment %} // Construct the URL using the teacherId {% url 'edit_teacher' 0 %} {% endcomment %}
+      var url = "#".replace('0', teacherId);
+      
+      // Navigate to the URL
+      window.location.href = url;
+  }
+
+  $(document).ready(function () {
+      $('#teacherTable').DataTable({
+      });
+    });
+
+  
+</script>
+
+
+
+
+<br>
+{% comment %} <!--<center><a href="{% url 'signup' %}" class="btn btn-primary">Add Teacher</a> </center>-->
+
+<!--<center><a href="/create" style="background-color: green; color: white; padding: 5px;">Add New Teacher</a></center> --> {% endcomment %}
+
+{% endblock %}

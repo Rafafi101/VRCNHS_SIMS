@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
+
+from .models import Teacher
 from .forms import TeacherRegistrationForm
 # Create your views here.
 
@@ -56,6 +58,23 @@ def teacher_register(request):
     else:
         form = TeacherRegistrationForm()
     return render(request, 'accounts/register.html', {'form': form})
+
+
+def teachers(request):
+    # form = TeacherSearchForm(request.GET or None)
+    teachers = Teacher.objects.all()
+
+    # if form.is_valid():
+    #     query = form.cleaned_data['query']
+    #     teachers = teachers.filter(
+    #         Q(last_name__icontains=query) |
+    #         Q(first_name__icontains=query)
+    #     )
+    #     print("Debug Statement: Searched Teacher -", query)  # Debug statement
+
+    # context = {'form': form, 'teachers': teachers}
+    context = {'teachers': teachers}
+    return render(request, 'accounts/teachers.html', context)
 
 
 def login(request):
