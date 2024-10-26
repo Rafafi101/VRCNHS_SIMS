@@ -75,66 +75,69 @@
     <br>
 
     <!-- This is where the basic commands are -->
-    <section>
-        <div class="card-container ">
-            <!-- Card 1 -->
-            <div class="card">
-                <h1 class="dynamic-text"><b>Create Student</b></h1>
-                <h6>You may manually add a student here.</h6>
-                <br>
-                <form action="{% url 'add_student' %}" method="get">
-                    <button type="submit" class="btn btn-primary">
-                        Add Student
-                    </button>
-                </form>
-                <br>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="card">
-                <h1 class="dynamic-text"><b>Import Students</b></h1>
-                <!-- IMPORT -->
-                <h6>Import students using Excel (.xlsx) files. Please use <a href="#" download>This Template</a> before uploading below.</h6>
-                {% comment %} action = '{% url 'import_students' %}' {% endcomment %}
-                <form method="post" enctype="multipart/form-data" action="#">
-                    {% csrf_token %}
-                    <div class="custom-file">
-                        
-                        <input type="file" class="custom-file-input" id="customFile" name="myfile" required>
-                        <div>
-                            <label class="custom-file-label" for="customFile">Choose file</label>
-                        </div>
+    {% if user.groups.all.0.name == 'ADMIN' %}
+        <section>
+            <div class="card-container ">
+                <!-- Card 1 -->
+                <div class="card">
+                    <h1 class="dynamic-text"><b>Create Student</b></h1>
+                    <h6>You may manually add a student here.</h6>
                     <br>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                </form>
+                    <form action="{% url 'add_student' %}" method="get">
+                        <button type="submit" class="btn btn-primary">
+                            Add Student
+                        </button>
+                    </form>
+                    <br>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card">
+                    <h1 class="dynamic-text"><b>Import Students</b></h1>
+                    <!-- IMPORT -->
+                    <h6>Import students using Excel (.xlsx) files. Please use <a href="#" download>This Template</a> before uploading below.</h6>
+                    {% comment %} action = '{% url 'import_students' %}' {% endcomment %}
+                    <form method="post" enctype="multipart/form-data" action="#">
+                        {% csrf_token %}
+                        <div class="custom-file">
+                            
+                            <input type="file" class="custom-file-input" id="customFile" name="myfile" required>
+                            <div>
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        <br>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+
+                    {% comment %} 
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Upload Excel File of Students:</label>
+                        <div class="file-upload-wrapper">
+                            <input class="form-control" type="file" name="myfile" id="formFile" required>
+                        </div>
+                    </div> 
+                    {% endcomment %}
+
+
+                <!-- Card 3 -->
+                <div class="card">
+                    <h1 class="dynamic-text"><b>Export all Students</b></h1>
+                    <h6>EXPORT STUDENTS using Excel (.xlsx) files. for your own local backup.</a></h6>
+                    <br>
+                    {% comment %} {% url 'export_students' %} {% endcomment %}
+                    <a href="#">
+                        <button type="button" class="export-button">
+                            EXPORT
+                        </button>
+                    </a>
+                    <br>
+                </div>
             </div>
-
-                {% comment %} 
-                <div class="mb-3">
-                    <label for="formFile" class="form-label">Upload Excel File of Students:</label>
-                    <div class="file-upload-wrapper">
-                        <input class="form-control" type="file" name="myfile" id="formFile" required>
-                    </div>
-                </div> 
-                {% endcomment %}
-
-
-            <!-- Card 3 -->
-            <div class="card">
-                <h1 class="dynamic-text"><b>Export all Students</b></h1>
-                <h6>EXPORT STUDENTS using Excel (.xlsx) files. for your own local backup.</a></h6>
-                <br>
-                {% comment %} {% url 'export_students' %} {% endcomment %}
-                <a href="#">
-                    <button type="button" class="export-button">
-                        EXPORT
-                    </button>
-                </a>
-                <br>
-            </div>
-        </div>
-    </section>
+        </section>
+    {% else %}
+    {% endif %}
 
 </div>
 {% endblock %}

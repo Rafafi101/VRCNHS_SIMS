@@ -35,6 +35,7 @@ def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, 
         autosize=True,
         margin=dict(l=0, r=0, b=0, t=30),
         template="plotly",
+        modebar_remove=['lasso2d', 'select2d']
     )
     return fig
 

@@ -610,11 +610,9 @@ img {
   border-radius: 5px;
 }
 #showcase {
-  background: url(../img/showcase.jpg) no-repeat top center fixed/cover;
   position: relative;
-  min-height: 100px;
-  color: #fff;
-  padding-top: 2rem; }
+  min-height: 50px;
+  color: #fff; }
   #showcase .home-search {
     min-height: 250px;
     position: relative;
