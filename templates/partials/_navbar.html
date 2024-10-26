@@ -34,7 +34,7 @@
                     </li>
 
                     <li 
-                    {% if '/teachers/' == request.path %}
+                    {% if '/accounts/teachers/' == request.path %}
                         class="nav-item active mr-3"
                     {% else %}
                         class="nav-item mr-3"
@@ -47,16 +47,6 @@
             {% endif %}
 
                 <ul class="navbar-nav ml-auto">
-                    <!-- Search form for students page only-->
-                    {% if '/students/' == request.path %}
-                        <li class="nav-item mr-3">
-                            {% comment %}  {% endcomment %}
-                            <form class="form-inline my-2 my-lg-0" action="{% url 'search_student' %}" method="get">
-                                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query_student" value="{{ values.query_student }}" >
-                                <button class="btn btn-primary search-button-home" type="submit-search">Search</button>
-                            </form>
-                        </li>
-                    {% endif %}
 
                     <li class="nav-item dropdown mr-3">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

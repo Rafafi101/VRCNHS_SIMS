@@ -1,3 +1,4 @@
+import datetime
 from django import forms
 from django.contrib.auth.models import User, Group
 from .models import Teacher
@@ -47,3 +48,66 @@ class TeacherRegistrationForm(UserCreationForm):
             )
 
         return user
+
+
+class TeacherForm(forms.ModelForm):
+    # Additional fields for username, password, and group
+    username = forms.CharField(max_length=150, required=True)
+    group = forms.ChoiceField(choices=(
+        (1, 'TEACHER'), (2, 'ADMIN'), (3, 'BOTH TEACHER AND ADMIN')), required=True)
+
+    class Meta:
+        model = Teacher
+        fields = '__all__'  # Use all fields from the Teacher model in the form
+        exclude = ['user']  # Exclude the user field
+        widgets = {
+            'birthday': forms.SelectDateWidget(years=range(1900, datetime.date.today().year+1)),
+            'appt_date': forms.SelectDateWidget(years=range(1900, datetime.date.today().year+1)),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Set initial values for username and group
+        self.fields['username'].initial = self.instance.user.username
+        groups = self.instance.user.groups.all()
+        if groups.filter(name='TEACHER').exists():
+            self.fields['group'].initial = '1'  # TEACHER
+        elif groups.filter(name='ADMIN').exists():
+            self.fields['group'].initial = '2'  # ADMIN
+
+        # Set custom field order
+        self.order_fields(
+            ['username', 'first_name', 'last_name', 'group', 'birthday', 'appt_date'])
+
+        # Add the 'date-auto-width' class to birthday and appointment date fields
+        self.fields['birthday'].widget.attrs.update(
+            {'class': 'date-auto-width'})
+        self.fields['appt_date'].widget.attrs.update(
+            {'class': 'date-auto-width'})
+
+    def save(self, commit=True):
+        # Save the teacher model
+        teacher = super().save(commit=False)
+        username = self.cleaned_data['username']
+        group_choice = int(self.cleaned_data['group'])
+
+        # Update the associated user model
+        user = teacher.user
+        user.username = username
+        user.first_name = teacher.first_name  # Update the first name
+        user.last_name = teacher.last_name  # Update the last name
+
+        if commit:
+            teacher.save()
+            user.save()
+            # Update the group of the associated user
+            teacher_group = Group.objects.get(name='TEACHER')
+            admin_group = Group.objects.get(name='ADMIN')
+
+            if group_choice == 1:  # TEACHER
+                user.groups.set([teacher_group])
+            elif group_choice == 2:  # ADMIN
+                user.groups.set([admin_group])
+
+        return teacher

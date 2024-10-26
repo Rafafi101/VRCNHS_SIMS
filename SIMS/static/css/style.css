@@ -267,6 +267,11 @@ ul.errorlist li {
   font-weight: bold; /* Optional: make the text bold for visibility */
 }
 
+.date-auto-width {
+  width: 30%;
+  display: inline-block;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="date"],
@@ -296,6 +301,14 @@ button[type="submit-search"] {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+/* In style.css */
+.edit-teacher-btn {
+  padding: 10px 20px; /* Adjust padding to make buttons uniform */
+  font-size: 16px; /* Make font size consistent */
+  margin: 5px; /* Add spacing between buttons */
+  min-width: 150px; /* Set a minimum width for uniformity */
 }
 
 

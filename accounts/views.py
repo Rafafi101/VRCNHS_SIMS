@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
 
 from .models import Teacher
-from .forms import TeacherRegistrationForm
+from .forms import TeacherForm, TeacherRegistrationForm
 # Create your views here.
 
 
@@ -77,6 +78,29 @@ def teachers(request):
     return render(request, 'accounts/teachers.html', context)
 
 
+def edit_teacher(request, teacher_id):
+    teacher = Teacher.objects.get(id=teacher_id)
+    user = teacher.user
+
+    if request.method == 'POST':
+        form = TeacherForm(request.POST, instance=teacher)
+        username = request.POST.get('username', '')
+
+        if form.is_valid() and not User.objects.filter(username=username).exclude(pk=user.pk).exists():
+            user.username = username
+            user.save()
+            form.save()
+            messages.success(request, 'Teacher Updated')
+            return redirect('teachers')
+        else:
+            messages.error(
+                request, "Username already exists or form is invalid.")
+    else:
+        form = TeacherForm(instance=teacher)
+
+    return render(request, 'accounts/edit_teacher.html', {'form': form, 'teacher_id': teacher_id, 'username': user.username})
+
+
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -102,3 +126,17 @@ def logout(request):
         auth.logout(request)
         messages.success(request, 'You are now logged out')
     return redirect('login')
+
+
+def delete_teacher(request, teacher_id):
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+
+    # Check if the user has permission to delete the teacher
+    if request.user.has_perm('delete_teacher', teacher):
+        teacher.delete()
+        messages.error(request, "Teacher Deleted", extra_tags='danger')
+        return redirect("teachers")
+    else:
+        # Handle unauthorized access (optional)
+        # Create an unauthorized_access.html template
+        return HttpResponse("Unauthorized access")
