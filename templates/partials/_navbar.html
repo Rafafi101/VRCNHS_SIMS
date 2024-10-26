@@ -44,6 +44,37 @@
                     </li>
 
                 </ul>
+            {% elif user.groups.all.0.name == 'TEACHER' %}
+                <a class="navbar-brand" href="{% url 'teacher_page' %}">
+                    <img src="{% static 'img/logo.png' %}" class="logo" alt="logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <ul class="navbar-nav">
+                        <li 
+                        {% if '/' == request.path %}
+                            class="nav-item active mr-3"
+                        {% else %}
+                            class="nav-item mr-3"
+                        {% endif %}
+                        >
+                        <a class="nav-link" href="{% url 'teacher_page' %}">Home</a>
+                        </li>
+
+                        <li 
+                        {% if '/students/' == request.path %}
+                            class="nav-item active mr-3"
+                        {% else %}
+                            class="nav-item mr-3"
+                        {% endif %} 
+                        >
+                        <a class="nav-link" href="#">Report Page</a>
+                        </li>
+
+                    </ul>
+                
             {% endif %}
 
                 <ul class="navbar-nav ml-auto">

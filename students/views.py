@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.db.models import Q
 
-from .forms import AdminTeacherStudentForm, EditStudentForm, AddStudentForm
+from .forms import AdminTeacherStudentForm, EditStudentForm, AddStudentForm, SpecifiClassroomForm
 from .models import Student
 from accounts.models import Teacher
 from classrooms.models import Classroom
@@ -62,6 +62,8 @@ def edit_student(request, lrn):
 
     is_admin = request.user.groups.filter(name='ADMIN').exists()
     teacher = None
+
+    # For non-admin users, retrieve the teacher instance if possible
     if not is_admin:
         try:
             teacher = Teacher.objects.get(user=request.user)
@@ -72,8 +74,8 @@ def edit_student(request, lrn):
 
     if request.method == 'POST':
         # Pass teacher and is_admin to the form
-        form = EditStudentForm(request.POST, instance=student,
-                               teacher=teacher, is_admin=is_admin)
+        form = EditStudentForm(
+            request.POST, instance=student, teacher=teacher, is_admin=is_admin)
         if form.is_valid():
             edited_fields = []  # Create a list to store edited fields and their previous values
             for field_name, new_value in form.cleaned_data.items():
@@ -87,8 +89,12 @@ def edit_student(request, lrn):
             student.edited_fields = ', '.join(edited_fields)
             form.save()  # Save the updated student instance
             messages.success(request, "Student Updated Successfully")
-            # Redirect after successful update
-            return redirect("student", lrn=lrn)
+
+            # Conditional redirect based on group
+            if is_admin:
+                return redirect("students")  # Redirect for admin
+            else:
+                return redirect("teacher_page")  # Redirect for teacher
         else:
             print(form.errors)  # Print form errors in the console for debugging
             messages.error(
@@ -104,24 +110,46 @@ def edit_student(request, lrn):
     context = {'form': form, 'student': student}
     return render(request, 'students/edit_student.html', context)
 
+
 # RETURN once( )
 
 
 def add_student(request):
-    # Base Add_student
-    if request.method == 'POST':
-        form = AddStudentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Student Added Successfully")
-            return redirect("students")
+    user = request.user
+
+    if user.groups.filter(name='ADMIN').exists():
+        # ADMIN Add_student
+        if request.method == 'POST':
+            form = AddStudentForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Student Added Successfully")
+                return redirect("students")
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"Error in {
+                            form[field].label}: {error}")
         else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"Error in {
-                                   form[field].label}: {error}")
-    else:
-        form = AddStudentForm()
+            form = AddStudentForm()
+
+    elif user.groups.filter(name='TEACHER').exists():
+        # Access the teacher profile related to the user
+        teacher = user.teacher_profile
+        is_admin = user.groups.filter(name='ADMIN').exists()
+
+        if request.method == 'POST':
+            form = SpecifiClassroomForm(
+                request.POST, teacher=teacher, is_admin=is_admin)
+            if form.is_valid():
+                form.save()
+                # Notify user of successful Creation of student
+                messages.success(request, "Student Added Successfully")
+                return redirect("teacher_page")
+        else:
+            form = SpecifiClassroomForm(teacher=teacher, is_admin=is_admin)
+            form.fields['classroom'].queryset = Classroom.objects.filter(
+                teacher=teacher)
 
     return render(request, 'students/add_student.html', {'form': form})
 

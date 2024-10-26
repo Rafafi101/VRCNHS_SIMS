@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
 
+from students.models import Student
+
 from .models import Teacher
 from .forms import TeacherForm, TeacherRegistrationForm
 # Create your views here.
@@ -140,3 +142,37 @@ def delete_teacher(request, teacher_id):
         # Handle unauthorized access (optional)
         # Create an unauthorized_access.html template
         return HttpResponse("Unauthorized access")
+
+
+def teacher_page(request):
+    # Retrieve the teacher associated with the current user
+    teacher = get_object_or_404(Teacher, user=request.user)
+
+    # Retrieve all classrooms associated with the teacher
+    classrooms = teacher.classroom_set.all()
+
+    if classrooms.exists():
+        # If at least one classroom exists
+        classroom = classrooms[0]  # Get the first classroom
+        # Filter students based on the classroom
+        students = Student.objects.filter(classroom=classroom)
+        teacher_name = f"{teacher.first_name} {teacher.last_name}"
+    else:
+        # If no classrooms exist
+        classroom = None
+        students = []
+        teacher_name = None
+
+    # Check if the teacher is not assigned a classroom
+    if not classrooms:
+        classroom_name = None
+    else:
+        classroom_name = f"{classroom.gradelevel.gradelevel} '{
+            classroom.classroom}'"
+
+    context = {
+        'classroom_name': classroom_name,
+        'teacher_name': teacher_name,
+        'students': students
+    }
+    return render(request, 'accounts/teacher_page.html', context)

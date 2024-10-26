@@ -14,6 +14,7 @@ class EditStudentForm(forms.ModelForm):
         # Disable the LRN field to make it read-only
         self.fields['LRN'].disabled = True
 
+        # Calculate and display age if birthday is set
         if self.instance.birthday:
             today = date.today()
             age = today.year - self.instance.birthday.year
@@ -21,16 +22,20 @@ class EditStudentForm(forms.ModelForm):
                 age -= 1
             self.fields['age'] = forms.IntegerField(initial=age, disabled=True)
 
+        # Limit classrooms based on user's role
         if teacher and not is_admin:
-            # Limit the choices for the classroom field to the teacher's classrooms
+            # Limit choices for classroom to the teacher's classrooms
             self.fields['classroom'].queryset = Classroom.objects.filter(
                 teacher=teacher)
             self.fields['classroom'].initial = Classroom.objects.filter(
                 teacher=teacher).first()
+        else:
+            # Admin can see all classrooms
+            self.fields['classroom'].queryset = Classroom.objects.all()
 
     class Meta:
         model = Student
-        fields = fields = '__all__'
+        fields = '__all__'  # Or specify fields if you want only certain fields
 
 
 class AddStudentForm(forms.ModelForm):
@@ -83,4 +88,32 @@ class AdminTeacherStudentForm(forms.ModelForm):
 
     class Meta:
         model = Student
+        fields = '__all__'
+
+
+class SpecifiClassroomForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        # Extract 'teacher' and 'is_admin' arguments
+        teacher = kwargs.pop('teacher', None)
+        is_admin = kwargs.pop('is_admin', False)
+        super().__init__(*args, **kwargs)
+
+        # Calculate age based on the birthday field in the instance, if available
+        if self.instance.birthday:
+            today = date.today()
+            age = today.year - self.instance.birthday.year
+            if today.month < self.instance.birthday.month or (today.month == self.instance.birthday.month and today.day < self.instance.birthday.day):
+                age -= 1
+            self.fields['age'] = forms.IntegerField(initial=age, disabled=True)
+
+        # Limit the 'classroom' queryset to classrooms associated with the teacher, unless user is admin
+        if teacher and not is_admin:
+            self.fields['classroom'].queryset = Classroom.objects.filter(
+                teacher=teacher)
+            self.fields['classroom'].initial = Classroom.objects.filter(
+                teacher=teacher)
+
+    class Meta:
+        model = Student  # Replace with the correct model name for the form
+        # Or specify fields explicitly, e.g., ['name', 'classroom', 'birthday']
         fields = '__all__'

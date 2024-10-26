@@ -17,5 +17,5 @@ urlpatterns = [
          views.edit_teacher, name='edit_teacher'),
     path('delete_teacher/<int:teacher_id>/',
          views.delete_teacher, name='delete_teacher'),
-
+    path('teacher_page/', views.teacher_page, name='teacher_page'),
 ]

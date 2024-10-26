@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from students.models import Student
 from accounts.models import Teacher
@@ -39,6 +39,11 @@ def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, 
 
 
 def index(request):
+    # Redirect to teacher page if the user is in the TEACHER group
+    if request.user.groups.filter(name='TEACHER').exists():
+        # Adjust to your actual URL name for teacher page
+        return redirect('teacher_page')
+
     # Logic for ADMIN users
     count = User.objects.count()
     # Calculate male and female student counts
@@ -94,5 +99,5 @@ def index(request):
         'scholarship_chart': scholarship_fig.to_html(full_html=False, include_plotlyjs='cdn'),
     }
 
-    # Render the home.html template with the context data
+    # Render the home.html template with the context data for ADMIN users
     return render(request, 'pages/index.html', context)
