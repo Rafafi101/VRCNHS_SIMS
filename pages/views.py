@@ -1,3 +1,6 @@
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse  # for reverse URL lookup
+from django.shortcuts import redirect
 import datetime
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
@@ -38,10 +41,10 @@ def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, 
 # Homepage
 
 
+@login_required(login_url='login')  # Redirects to login if unauthenticated
 def index(request):
     # Redirect to teacher page if the user is in the TEACHER group
     if request.user.groups.filter(name='TEACHER').exists():
-        # Adjust to your actual URL name for teacher page
         return redirect('teacher_page')
 
     # Logic for ADMIN users
@@ -49,8 +52,8 @@ def index(request):
     # Calculate male and female student counts
     male_count = Student.objects.filter(Q(sex='M') | Q(sex='Male')).count()
     female_count = Student.objects.filter(Q(sex='F') | Q(sex='Female')).count()
-    # Calculate total student count
     total_students = male_count + female_count
+
     # Create pie chart for gender distribution
     gender_fig = create_pie_chart(
         labels=['Male', 'Female'],
@@ -58,7 +61,8 @@ def index(request):
         title='Student Gender Distribution'
     )
     gender_chart_div = pio_to_html(
-        gender_fig, full_html=False, include_plotlyjs='cdn')
+        gender_fig, full_html=False, include_plotlyjs='cdn'
+    )
 
     students = Student.objects.all()
 
@@ -80,10 +84,7 @@ def index(request):
         'Distribution of Scholars'
     )
 
-    # Get the current date and time
     current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-    # Retrieve total teachers and classrooms
     total_teachers = Teacher.objects.count()
     total_classrooms = Classroom.objects.count()
 
