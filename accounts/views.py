@@ -83,11 +83,9 @@ def teachers(request):
 def edit_teacher(request, teacher_id):
     teacher = Teacher.objects.get(id=teacher_id)
     user = teacher.user
-
     if request.method == 'POST':
-        form = TeacherForm(request.POST, instance=teacher)
+        form = TeacherForm(request.POST, instance=teacher, user=request.user)
         username = request.POST.get('username', '')
-
         if form.is_valid() and not User.objects.filter(username=username).exclude(pk=user.pk).exists():
             user.username = username
             user.save()
@@ -98,8 +96,7 @@ def edit_teacher(request, teacher_id):
             messages.error(
                 request, "Username already exists or form is invalid.")
     else:
-        form = TeacherForm(instance=teacher)
-
+        form = TeacherForm(instance=teacher, user=request.user)
     return render(request, 'accounts/edit_teacher.html', {'form': form, 'teacher_id': teacher_id, 'username': user.username})
 
 

@@ -94,6 +94,9 @@
                             <i class="fas fa-user-circle"></i> {{ user.username }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="{% url 'edit_teacher' user.id %}">
+                                <i class="fas fa-user-edit"></i> Edit Profile
+                            </a>
                             <a class="dropdown-item" href="{% url 'password_change' %}">
                                 <i class="fas fa-key"></i> Change Password
                             </a>

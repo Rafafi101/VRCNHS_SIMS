@@ -66,6 +66,7 @@ class TeacherForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
         # Set initial values for username and group
@@ -85,6 +86,10 @@ class TeacherForm(forms.ModelForm):
             {'class': 'date-auto-width'})
         self.fields['appt_date'].widget.attrs.update(
             {'class': 'date-auto-width'})
+
+        # Hide the 'group' field for TEACHER group users
+        if user and user.groups.filter(name='TEACHER').exists():
+            self.fields.pop('group')
 
     def save(self, commit=True):
         # Save the teacher model

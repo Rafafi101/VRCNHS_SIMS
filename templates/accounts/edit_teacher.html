@@ -14,6 +14,7 @@
 
 {% block content %}
 
+{% if user.groups.all.0.name == 'ADMIN' %}
   <!-- Breadcrumb -->
   <section id="bc" class="mt-3">
     <div class="container">
@@ -25,6 +26,19 @@
       </nav>
     </div>
   </section>
+{% elif user.groups.all.0.name == 'TEACHER'%}
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'teacher_page' %}">Homepage</a></li>
+          <li class="breadcrumb-item active">EDIT Student Profile</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+{% endif %}
 
 
   <!-- Alerts -->
@@ -45,13 +59,13 @@
                             {{ form.as_p }}
                         </div>
                         <div class="form-group text-center">
+                          {% if user.groups.all.0.name == 'ADMIN' %}
                             <a href="{% url 'teachers' %}" class="btn btn-secondary edit-teacher-btn">Back to View Teachers</a>
+                          {% endif %}
                             <button type="submit" class="btn btn-primary edit-teacher-btn">Save Changes</button>
                             <br><br>
                             <a href="{% url 'delete_teacher' teacher_id %}" class="btn btn-danger uniform-button">Delete Teacher</a> 
                         </div>
-                        
-
                     </form>
                 </div>
             </div>
