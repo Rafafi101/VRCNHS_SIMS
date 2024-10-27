@@ -10,10 +10,6 @@ $.getScript("https://code.jquery.com/jquery-3.6.4.min.js", function() {
     $.getScript("https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js", function() {
         $(document).ready(function () {
             $('#studentTable').DataTable({
-                paging: true, // Enable pagination
-                searching: true, // Enable searching
-                ordering: true, // Enable column ordering
-                info: true // Show table information
             });
         });
     });
@@ -24,13 +20,29 @@ $.getScript("https://code.jquery.com/jquery-3.6.4.min.js", function() {
     $.getScript("https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js", function() {
         $(document).ready(function () {
             $('#teachersTable').DataTable({
-                paging: true, // Enable pagination
-                searching: true, // Enable searching
-                ordering: true, // Enable column ordering
-                info: true // Show table information
             });
         });
     });
+});
+
+$.getScript("https://code.jquery.com/jquery-3.6.4.min.js", function() {
+    $.getScript("https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js", function() {
+        $(document).ready(function () {
+            $('#classroom-table-7').DataTable({});
+            $('#classroom-table-8').DataTable({});
+            $('#classroom-table-9').DataTable({});
+            $('#classroom-table-10').DataTable({});
+            $('#classroom-table-11').DataTable({});
+            $('#classroom-table-12').DataTable({});
+
+        });
+    });
+});
+
+
+//<!-- DataTables Initialization -->
+$(document).ready(function () {
+    
 });
 
 $(document).ready(function() {
