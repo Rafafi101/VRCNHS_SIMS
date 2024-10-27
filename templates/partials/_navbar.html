@@ -34,6 +34,16 @@
                     </li>
 
                     <li 
+                    {% if '/reports/' == request.path %}
+                        class="nav-item active mr-3"
+                    {% else %}
+                        class="nav-item mr-3"
+                    {% endif %} 
+                    >
+                    <a class="nav-link" href="{% url 'reports' %}">Reports</a>
+                    </li>
+
+                    <li 
                     {% if '/accounts/teachers/' == request.path %}
                         class="nav-item active mr-3"
                     {% else %}
@@ -84,13 +94,13 @@
                         </li>
 
                         <li 
-                        {% if '/report_page' == request.path %}
+                        {% if '/reports/' == request.path %}
                             class="nav-item active mr-3"
                         {% else %}
                             class="nav-item mr-3"
                         {% endif %} 
                         >
-                        <a class="nav-link" href="#">Report Page</a>
+                        <a class="nav-link" href="{% url 'reports' %}">Reports</a>
                         </li>
 
                     </ul>
