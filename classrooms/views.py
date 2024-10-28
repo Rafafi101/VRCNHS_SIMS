@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+
+from students.models import Student
 
 from .models import Classroom
 
@@ -29,3 +31,16 @@ def classrooms(request):
     }
 
     return render(request, 'classrooms/classrooms.html', context)
+
+
+def classroom(request, classroom_id):
+    # Retrieve the classroom with the given ID
+    classroom = get_object_or_404(Classroom, id=classroom_id)
+    # Get all students assigned to this classroom
+    students = Student.objects.filter(classroom=classroom)
+
+    context = {
+        'classroom': classroom,
+        'students': students,
+    }
+    return render(request, 'classrooms/classroom.html', context)

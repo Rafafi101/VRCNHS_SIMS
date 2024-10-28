@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} | Classroom Details {% endblock title %}
+
+{% block head_block %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="py-2 text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-12">
+                {% if classroom %}
+                    <h1>{{ classroom.gradelevel.gradelevel }} - {{ classroom.classroom }}</h1>
+                    <h3>Teacher: {% if classroom.teacher %} {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }} {% else %} Not assigned {% endif %}</h3>
+                {% else %}
+                    <h1 style="color: red;">Classroom Not Found</h1>
+                {% endif %}
+                <p class="lead">View all students in the classroom</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class='container'>
+    <br>
+    <!-- STUDENTS -->
+    <div class='table-responsive'>
+        <table id="studentTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>LRN</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Age</th>
+                    <th>General Average</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if students %}
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ student.LRN }}</td>
+                            <td>{{ student.last_name }}
+                                {% if student.suffix_name %} {{ student.suffix_name }}{% endif %}
+                                {% if student.first_name %}, {{ student.first_name }}{% endif %}
+                                {% if student.middle_name %} {{ student.middle_name }}{% endif %}
+                            </td>
+                            <td>{{ student.status }}</td>
+                            <td>{{ student.age }}</td>
+                            <td>{{ student.general_average }}</td>
+                            <td>
+                                <a href="{% url 'student' student.LRN %}" class="btn btn-primary view-button">
+                                    View Profile
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">No Students in this Classroom</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+</div>
+{% endblock %}
