@@ -4,13 +4,11 @@
 
 {% block title %} | Classrooms {% endblock title %}
 
-
 {% block head_block %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 {% endblock %}
-
 
 {% block content %}
 <section id="showcase-inner" class="py-2 text-white">
@@ -18,7 +16,7 @@
         <div class="row text-center">
             <div class="col-md-12">
                 <h1 class="display-4">Classrooms</h1>
-                <h6><a href="#grade7">Grade 7</a> |   <a href="#grade8">Grade 8</a> |   <a href="#grade9">Grade 9</a>   |   <a href="#grade10">Grade 10</a>   |   <a href="#grade11">Grade 11</a>   |   <a href="#grade12">Grade 12</a></h6>
+                <h6><a href="#grade7">Grade 7</a> | <a href="#grade8">Grade 8</a> | <a href="#grade9">Grade 9</a> | <a href="#grade10">Grade 10</a> | <a href="#grade11">Grade 11</a> | <a href="#grade12">Grade 12</a></h6>
             </div>
         </div>
     </div>
@@ -28,391 +26,344 @@
 {% include 'partials/_alerts.html' %}
 
 <div class="container">
+    <div class="button-container mb-4">
+        <a href="{% url 'add_classroom' %}" class="btn btn-primary">Add New Classroom</a>
+    </div>
 
-<div class="button-container">
-    <a href="{% url 'add_classroom' %}" class="btn btn-primary">Add New Classroom</a>
-</div>
+    <!-- Grade 7 Table -->
+    <div id="grade7" class="table-container">
+        <center>
+            <h2>Grade 7 Classrooms</h2>
+            <div class="table-responsive">
+                <table class="classroom-table table-striped" id="classroom-table-7">
+                    <thead>
+                        <tr>
+                            <th>Classroom</th>
+                            <th>Teacher</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for classroom in classrooms_grade_7 %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
+                            </td>
+                            <td>
+                                <!-- Teacher Selection Form -->
+                                <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
+                                    {% csrf_token %}
+                                    <div class="teacher-form-container">
+                                        <select name="teacher_id" class="teacher-select form-select form-select-sm me-2">
+                                            <option value="">Not assigned</option>
+                                            {% for teacher in teachers %}
+                                                <option value="{{ teacher.id }}" {% if classroom.teacher and teacher.id == classroom.teacher.id %}selected{% endif %}>{{ teacher.first_name }} {{ teacher.last_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="teacher-save-btn btn btn-success btn-sm">Save</button>
+                                    </div>
+                                </form>
+                            </td> 
+                            <td>
+                                <!-- Edit Button -->
+                                <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                
+                                <!-- Delete Form and Button -->
+                                <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </center>
+    </div>
 
+    <!-- Grade 8 Table -->
+    <div id="grade8" class="table-container">
+        <center>
+            <h2>Grade 8 Classrooms</h2>
+            <div class="table-responsive">
+                <table class="classroom-table table-striped" id="classroom-table-8">
+                    <thead>
+                        <tr>
+                            <th>Classroom</th>
+                            <th>Teacher</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for classroom in classrooms_grade_8 %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
+                            </td>
+                            <td>
+                                <!-- Teacher Selection Form -->
+                                <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
+                                    {% csrf_token %}
+                                    <div class="teacher-form-container">
+                                        <select name="teacher_id" class="teacher-select form-select form-select-sm me-2">
+                                            <option value="">Not assigned</option>
+                                            {% for teacher in teachers %}
+                                                <option value="{{ teacher.id }}" {% if classroom.teacher and teacher.id == classroom.teacher.id %}selected{% endif %}>{{ teacher.first_name }} {{ teacher.last_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="teacher-save-btn btn btn-success btn-sm">Save</button>
+                                    </div>
+                                </form>
+                            </td> 
+                            <td>
+                                <!-- Edit Button -->
+                                <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                
+                                <!-- Delete Form and Button -->
+                                <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </center>
+    </div>
 
-<!-- GRADE 7 TABLE -->
-</center>
-<br>
-<div id="grade7" class="table-container">
-            <center>
-                <h2>Grade 7 Classrooms</h2>
-                <div class="table-responsive">
-                    <!--This table is to help specify the css file to format the classroom tables to align -->
-                    <table class="classroom-table table-striped" id="classroom-table-7">
-                        <thead>
-                            <tr>
-                                <th>Classroom</th>
-                                <th>Teacher</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+    <!-- Grade 9 Table -->
+    <div id="grade9" class="table-container">
+        <center>
+            <h2>Grade 9 Classrooms</h2>
+            <div class="table-responsive">
+                <table class="classroom-table table-striped" id="classroom-table-9">
+                    <thead>
+                        <tr>
+                            <th>Classroom</th>
+                            <th>Teacher</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for classroom in classrooms_grade_9 %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
+                            </td>
+                            <td>
+                                <!-- Teacher Selection Form -->
+                                <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
+                                    {% csrf_token %}
+                                    <div class="teacher-form-container">
+                                        <select name="teacher_id" class="teacher-select form-select form-select-sm me-2">
+                                            <option value="">Not assigned</option>
+                                            {% for teacher in teachers %}
+                                                <option value="{{ teacher.id }}" {% if classroom.teacher and teacher.id == classroom.teacher.id %}selected{% endif %}>{{ teacher.first_name }} {{ teacher.last_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="teacher-save-btn btn btn-success btn-sm">Save</button>
+                                    </div>
+                                </form>
+                            </td> 
+                            <td>
+                                <!-- Edit Button -->
+                                <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                
+                                <!-- Delete Form and Button -->
+                                <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </center>
+    </div>
 
+    <!-- Grade 10 Table -->
+    <div id="grade10" class="table-container">
+        <center>
+            <h2>Grade 10 Classrooms</h2>
+            <div class="table-responsive">
+                <table class="classroom-table table-striped" id="classroom-table-10">
+                    <thead>
+                        <tr>
+                            <th>Classroom</th>
+                            <th>Teacher</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for classroom in classrooms_grade_10 %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
+                            </td>
+                            <td>
+                                <!-- Teacher Selection Form -->
+                                <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
+                                    {% csrf_token %}
+                                    <div class="teacher-form-container">
+                                        <select name="teacher_id" class="teacher-select form-select form-select-sm me-2">
+                                            <option value="">Not assigned</option>
+                                            {% for teacher in teachers %}
+                                                <option value="{{ teacher.id }}" {% if classroom.teacher and teacher.id == classroom.teacher.id %}selected{% endif %}>{{ teacher.first_name }} {{ teacher.last_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="teacher-save-btn btn btn-success btn-sm">Save</button>
+                                    </div>
+                                </form>
+                            </td> 
+                            <td>
+                                <!-- Edit Button -->
+                                <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                
+                                <!-- Delete Form and Button -->
+                                <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </center>
+    </div>
 
-                            {% for classroom in classrooms_grade_7 %}
-                                <tr>
-                                    <td>
-                                        {% comment %} {% url 'classroom_detail' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
-                                    </td>
-                                    <td>
-                                        {% if classroom.teacher %}
-                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
-                                        {% else %}
-                                            Not assigned
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <!-- Edit Button -->
-                                        {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
-                                        
-                                        <!-- Delete Form and Button -->
-                                        {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
-                                        <form action="#" method="POST" style="display: inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
-                                        </form>
-                                    </td>
-                                    
-                                </tr>
-                            {% endfor %}
-                            
-                        </tbody>
-                        
-                    </table>
-                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+    <!-- Grade 11 Table -->
+    <div id="grade11" class="table-container">
+        <center>
+            <h2>Grade 11 Classrooms</h2>
+            <div class="table-responsive">
+                <table class="classroom-table table-striped" id="classroom-table-11">
+                    <thead>
+                        <tr>
+                            <th>Classroom</th>
+                            <th>Teacher</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for classroom in classrooms_grade_11 %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
+                            </td>
+                            <td>
+                                <!-- Teacher Selection Form -->
+                                <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
+                                    {% csrf_token %}
+                                    <div class="teacher-form-container">
+                                        <select name="teacher_id" class="teacher-select form-select form-select-sm me-2">
+                                            <option value="">Not assigned</option>
+                                            {% for teacher in teachers %}
+                                                <option value="{{ teacher.id }}" {% if classroom.teacher and teacher.id == classroom.teacher.id %}selected{% endif %}>{{ teacher.first_name }} {{ teacher.last_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="teacher-save-btn btn btn-success btn-sm">Save</button>
+                                    </div>
+                                </form>
+                            </td> 
+                            <td>
+                                <!-- Edit Button -->
+                                <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                
+                                <!-- Delete Form and Button -->
+                                <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </center>
+    </div>
 
-                </div>
-            </center>
-</div>
-<center>
+    <!-- Grade 12 Table -->
+    <div id="grade12" class="table-container">
+        <center>
+            <h2>Grade 12 Classrooms</h2>
+            <div class="table-responsive">
+                <table class="classroom-table table-striped" id="classroom-table-12">
+                    <thead>
+                        <tr>
+                            <th>Classroom</th>
+                            <th>Teacher</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for classroom in classrooms_grade_12 %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
+                            </td>
+                            <td>
+                                <!-- Teacher Selection Form -->
+                                <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
+                                    {% csrf_token %}
+                                    <div class="teacher-form-container">
+                                        <select name="teacher_id" class="teacher-select form-select form-select-sm me-2">
+                                            <option value="">Not assigned</option>
+                                            {% for teacher in teachers %}
+                                                <option value="{{ teacher.id }}" {% if classroom.teacher and teacher.id == classroom.teacher.id %}selected{% endif %}>{{ teacher.first_name }} {{ teacher.last_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="teacher-save-btn btn btn-success btn-sm">Save</button>
+                                    </div>
+                                </form>
+                            </td> 
+                            <td>
+                                <!-- Edit Button -->
+                                <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                
+                                <!-- Delete Form and Button -->
+                                <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </center>
+    </div>
 
-<!-- GRADE 8 TABLE -->
-</center>
-<br>
-<div id="grade8" class="table-container">
-            <center>
-                <h2>Grade 8 Classrooms</h2>
-                <div class="table-responsive">
-                    <!--This table is to help specify the css file to format the classroom tables to align -->
-                    <table class="classroom-table table-striped" id="classroom-table-8">
-                        <thead>
-                            <tr>
-                                <th>Classroom</th>
-                                <th>Teacher</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+    <!-- IMPORT -->
+    <div class="card">
+        <h1 class="dynamic-text"><b>Import Classrooms</b></h1>
+        <!-- Import instructions and download link for template -->
+        <h6>Import classrooms using Excel (.xlsx) files. Please use <a href="#" download>This Template</a> before uploading below.</h6>
 
+        <!-- Original form structure -->
+        <form method="post" enctype="multipart/form-data" action="#">
+            {% csrf_token %}
+            
+            <!-- Custom file input field -->
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFile" name="myfile" required>
+                <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
 
-                            {% for classroom in classrooms_grade_8 %}
-                                <tr>
-                                    <td>
-                                        {% comment %} {% url 'classroom_detail' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
-                                    </td>
-                                    <td>
-                                        {% if classroom.teacher %}
-                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
-                                        {% else %}
-                                            Not assigned
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <!-- Edit Button -->
-                                        {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
-                                        
-                                        <!-- Delete Form and Button -->
-                                        {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
-                                        <form action="#" method="POST" style="display: inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            
-                        </tbody>
-                        
-                    </table>
-                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
-
-                </div>
-            </center>
-</div>
-<center>
-
-
-<!-- GRADE 9 TABLE -->
-</center>
-<br>
-<div id="grade9" class="table-container">
-            <center>
-                <h2>Grade 9 Classrooms</h2>
-                <div class="table-responsive">
-                    <!--This table is to help specify the css file to format the classroom tables to align -->
-                    <table class="classroom-table table-striped" id="classroom-table-9">
-                        <thead>
-                            <tr>
-                                <th>Classroom</th>
-                                <th>Teacher</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
-
-
-                            {% for classroom in classrooms_grade_9 %}
-                                <tr>
-                                    <td>
-                                        {% comment %} {% url 'classroom_detail' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
-                                    </td>
-                                    <td>
-                                        {% if classroom.teacher %}
-                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
-                                        {% else %}
-                                            Not assigned
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <!-- Edit Button -->
-                                        {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
-                                        
-                                        <!-- Delete Form and Button -->
-                                        {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
-                                        <form action="#" method="POST" style="display: inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            
-                        </tbody>
-                        
-                    </table>
-                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
-
-                </div>
-            </center>
-</div>
-<center>
-
-<!-- GRADE 10 TABLE -->
-</center>
-<br>
-<div id="grade10" class="table-container">
-            <center>
-                <h2>Grade 10 Classrooms</h2>
-                <div class="table-responsive">
-                    <!--This table is to help specify the css file to format the classroom tables to align -->
-                    <table class=" classroom-table table-striped" id="classroom-table-10">
-                        <thead>
-                            <tr>
-                                <th>Classroom</th>
-                                <th>Teacher</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
-
-
-                            {% for classroom in classrooms_grade_10 %}
-                                <tr>
-                                    <td>
-                                        {% comment %} {% url 'classroom_detail' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
-                                    </td>
-                                    <td>
-                                        {% if classroom.teacher %}
-                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
-                                        {% else %}
-                                            Not assigned
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <!-- Edit Button -->
-                                        {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
-                                        
-                                        <!-- Delete Form and Button -->
-                                        {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
-                                        <form action="#" method="POST" style="display: inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            
-                        </tbody>
-                        
-                    </table>
-                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
-
-                </div>
-            </center>
-</div>
-<center>
-
-
-<!-- GRADE 11 TABLE -->
-</center>
-<br>
-<div id="grade11" class="table-container">
-            <center>
-                <h2>Grade 11 Classrooms</h2>
-                <div class="table-responsive">
-                    <!--This table is to help specify the css file to format the classroom tables to align -->
-                    <table class="classroom-table table-striped" id="classroom-table-11">
-                        <thead>
-                            <tr>
-                                <th>Classroom</th>
-                                <th>Teacher</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
-
-
-                            {% for classroom in classrooms_grade_11 %}
-                                <tr>
-                                    <td>
-                                        {% comment %} {% url 'classroom_detail' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
-                                    </td>
-                                    <td>
-                                        {% if classroom.teacher %}
-                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
-                                        {% else %}
-                                            Not assigned
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <!-- Edit Button -->
-                                        {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
-                                        
-                                        <!-- Delete Form and Button -->
-                                        {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
-                                        <form action="#" method="POST" style="display: inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            
-                        </tbody>
-                        
-                    </table>
-                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
-
-                </div>
-            </center>
-</div>
-<center>
-
-<!-- GRADE 12 TABLE -->
-</center>
-<br>
-<div id="grade12" class="table-container">
-            <center>
-                <h2>Grade 12 Classrooms</h2>
-                <div class="table-responsive">
-                    <!--This table is to help specify the css file to format the classroom tables to align -->
-                    <table class="classroom-table table-striped" id="classroom-table-12">
-                        <thead>
-                            <tr>
-                                <th>Classroom</th>
-                                <th>Teacher</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
-
-
-                            {% for classroom in classrooms_grade_12 %}
-                                <tr>
-                                    <td>
-                                        {% comment %} {% url 'classroom_detail' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
-                                    </td>
-                                    <td>
-                                        {% if classroom.teacher %}
-                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
-                                        {% else %}
-                                            Not assigned
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <!-- Edit Button -->
-                                        {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
-                                        
-                                        <!-- Delete Form and Button -->
-                                        {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
-                                        <form action="#" method="POST" style="display: inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-sm action-btn btn-uniform">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            
-                        </tbody>
-                        
-                    </table>
-                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
-
-                </div>
-            </center>
-</div>
-<center>
-
-
-<!-- IMPORT -->
-{% comment %} {% url 'import_classrooms' %} {% endcomment %}
-<div class="card">
-    <h1 class="dynamic-text"><b>Import Classrooms</b></h1>
-    <!-- Import instructions and download link for template -->
-    <h6>Import classrooms using Excel (.xlsx) files. Please use <a href="#" download>This Template</a> before uploading below.</h6>
-
-    <!-- Original form structure -->
-    {% comment %} {% url 'import_classrooms' %} {% endcomment %}
-    <form method="post" enctype="multipart/form-data" action="#">
-        {% csrf_token %}
-        
-        <!-- Custom file input field -->
-        <div class="custom-file">
-            <input type="file" class="custom-file-input" id="customFile" name="myfile" required>
-            <label class="custom-file-label" for="customFile">Choose file</label>
-        </div>
-
-        <!-- Upload button -->
-        <button type="submit" class="btn btn-primary mt-3">Upload</button>
-    </form>
-</div>
-
-
+            <!-- Upload button -->
+            <button type="submit" class="btn btn-primary mt-3">Upload</button>
+        </form>
+    </div>
 
     <br>
-    {% comment %} {% url 'export_classrooms_to_excel' %} {% endcomment %}
     <a href="#" class="btn btn-success" style="margin-left: 10px;">
         Export Classrooms to Excel
     </a>
@@ -422,14 +373,11 @@
 
 <br>
 
-
-
 <!-- Add DataTables JS -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
 <script>
-    
     // Check if there is a stored scroll position
     var storedScrollPos = sessionStorage.getItem('scrollPos');
     if (storedScrollPos !== null) {
@@ -446,8 +394,6 @@
     window.onbeforeunload = function () {
         sessionStorage.setItem('scrollPos', window.scrollY);
     };
-
-
 </script>
   
 </div>

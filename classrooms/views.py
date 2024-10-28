@@ -148,3 +148,85 @@ def edit_classroom(request, classroom_id):
 
     # Render the edit_classroom.html template with the provided context
     return render(request, 'classrooms/edit_classroom.html', context)
+
+
+def classrooms(request):
+    # Retrieve all classrooms by grade level
+    classrooms_grade_7 = Classroom.objects.filter(
+        gradelevel__gradelevel='Grade 7')
+    classrooms_grade_8 = Classroom.objects.filter(
+        gradelevel__gradelevel='Grade 8')
+    classrooms_grade_9 = Classroom.objects.filter(
+        gradelevel__gradelevel='Grade 9')
+    classrooms_grade_10 = Classroom.objects.filter(
+        gradelevel__gradelevel='Grade 10')
+    classrooms_grade_11 = Classroom.objects.filter(
+        gradelevel__gradelevel='Grade 11')
+    classrooms_grade_12 = Classroom.objects.filter(
+        gradelevel__gradelevel='Grade 12')
+
+    # Retrieve all teachers
+    teachers = Teacher.objects.all()
+
+    context = {
+        'classrooms_grade_7': classrooms_grade_7,
+        'classrooms_grade_8': classrooms_grade_8,
+        'classrooms_grade_9': classrooms_grade_9,
+        'classrooms_grade_10': classrooms_grade_10,
+        'classrooms_grade_11': classrooms_grade_11,
+        'classrooms_grade_12': classrooms_grade_12,
+        'teachers': teachers,
+    }
+
+    return render(request, 'classrooms/classrooms.html', context)
+
+
+def assign_teacher(request, classroom_id):
+    # Only handle POST requests
+    if request.method == 'POST':
+        # Retrieve the classroom object
+        classroom = get_object_or_404(Classroom, id=classroom_id)
+
+        # Get the selected teacher ID from the form
+        teacher_id = request.POST.get('teacher_id')
+
+        if teacher_id == "":
+            # If no teacher selected, set teacher to None
+            classroom.teacher = None
+        else:
+            try:
+                # Get the teacher object
+                teacher = Teacher.objects.get(id=teacher_id)
+                classroom.teacher = teacher
+            except Teacher.DoesNotExist:
+                messages.error(request, "Selected teacher does not exist.")
+                return redirect('classrooms')
+
+        # Save the updated classroom object
+        classroom.save()
+        messages.success(request, "Teacher assignment updated successfully.")
+
+    # Redirect back to the classrooms page
+    return redirect('classrooms')
+
+
+def delete_classroom(request, classroom_id):
+    # Retrieve the classroom object based on the provided classroom_id
+    classroom = get_object_or_404(Classroom, id=classroom_id)
+
+    if request.method == 'POST':
+        # Debug statement for deleting classroom
+        print("Debug Statement: Deleting Classroom -", classroom.classroom)
+
+        # Capture the classroom name before deletion for messaging
+        classroom_name = classroom.classroom
+
+        # Delete the classroom
+        classroom.delete()
+
+        # Add a success message with the name of the deleted classroom
+        messages.error(request, f'Classroom "{
+            classroom_name}" was deleted.')
+
+    # Redirect back to the classrooms page
+    return redirect('classrooms')

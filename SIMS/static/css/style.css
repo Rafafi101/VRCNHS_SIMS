@@ -775,3 +775,20 @@ img {
     background-color: #c82333 !important; /* Darker red on hover */
     border-color: #bd2130 !important;
 }
+
+.teacher-form-container {
+  display: flex;
+  align-items: center;       /* Aligns vertically within the container */
+  justify-content: center;   /* Centers the entire form horizontally */
+  gap: 8px;                  /* Creates consistent spacing between elements */
+}
+
+.teacher-select,
+.teacher-save-btn {
+  height: 2.5rem;            /* Ensures both elements have the same height */
+}
+
+.teacher-select {
+  padding-top: 0;            /* Removes any top padding for better alignment */
+  padding-bottom: 0;         /* Removes any bottom padding for better alignment */
+}
