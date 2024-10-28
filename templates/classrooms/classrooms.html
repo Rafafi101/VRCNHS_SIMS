@@ -23,6 +23,9 @@
         </div>
     </div>
 </section>
+<br>
+<!-- Alerts -->
+{% include 'partials/_alerts.html' %}
 
 <div class="container">
 
@@ -67,7 +70,7 @@
                                     <td>
                                         <!-- Edit Button -->
                                         {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="#" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
                                         
                                         <!-- Delete Form and Button -->
                                         {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
@@ -126,7 +129,7 @@
                                     <td>
                                         <!-- Edit Button -->
                                         {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="#" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
                                         
                                         <!-- Delete Form and Button -->
                                         {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
@@ -185,7 +188,7 @@
                                     <td>
                                         <!-- Edit Button -->
                                         {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="#" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
                                         
                                         <!-- Delete Form and Button -->
                                         {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
@@ -243,7 +246,7 @@
                                     <td>
                                         <!-- Edit Button -->
                                         {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="#" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
                                         
                                         <!-- Delete Form and Button -->
                                         {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
@@ -302,7 +305,7 @@
                                     <td>
                                         <!-- Edit Button -->
                                         {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="#" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
                                         
                                         <!-- Delete Form and Button -->
                                         {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
@@ -360,7 +363,7 @@
                                     <td>
                                         <!-- Edit Button -->
                                         {% comment %} {% url 'edit_classroom' classroom.id %} {% endcomment %}
-                                        <a href="#" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary btn-sm action-btn btn-uniform">Edit</a>
                                         
                                         <!-- Delete Form and Button -->
                                         {% comment %} {% url 'delete_classroom' classroom.id %} {% endcomment %}
