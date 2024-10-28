@@ -114,6 +114,15 @@ def reports(request):
     # Retrieve all students
     students = Student.objects.all()
 
+    # Filter based on grade level (from dropdown)
+    selected_gradelevel = request.GET.get('gradelevel', 'all')
+    if selected_gradelevel != 'all':
+        if selected_gradelevel == 'myclassroom' and request.user.groups.filter(name='TEACHER').exists():
+            students = students.filter(classroom__teacher__user=request.user)
+        else:
+            students = students.filter(
+                classroom__gradelevel__id=selected_gradelevel)
+
     # Aggregate counts for each relevant field with explicit output_field set
     strand_counts = students.values(
         strand_value=Coalesce('strand', V('None'), output_field=CharField())
@@ -156,17 +165,78 @@ def reports(request):
         status_value=Coalesce('status', V('Unknown'), output_field=CharField())
     ).annotate(count=Count('status_value'))
 
-    # Pass the aggregated data to the template for chart rendering or display
+    # Create charts
+    strand_chart = create_bar_chart(
+        [item['strand_value'] for item in strand_counts],
+        [item['count'] for item in strand_counts],
+        'Academic Strand Distribution'
+    )
+
+    economic_chart = create_bar_chart(
+        [item['household_income_value'] for item in economic_counts],
+        [item['count'] for item in economic_counts],
+        'Household Status Distribution'
+    )
+
+    religion_chart = create_bar_chart(
+        [item['religion_value'] for item in religion_counts],
+        [item['count'] for item in religion_counts],
+        'Religion Distribution'
+    )
+
+    dropout_chart = create_pie_chart(
+        [item['is_dropout_value'] for item in dropout_counts],
+        [item['count'] for item in dropout_counts],
+        'Dropout Status Distribution'
+    )
+
+    working_student_chart = create_pie_chart(
+        [item['is_working_student_value'] for item in working_student_counts],
+        [item['count'] for item in working_student_counts],
+        'Working Student Distribution'
+    )
+
+    scholarship_chart = create_pie_chart(
+        [item['is_4ps_value'] for item in scholarship_counts],
+        [item['count'] for item in scholarship_counts],
+        '4P\'s Scholars Distribution'
+    )
+
+    sex_chart = create_pie_chart(
+        [item['sex_value'] for item in sex_counts],
+        [item['count'] for item in sex_counts],
+        'Gender Distribution'
+    )
+
+    returnee_chart = create_pie_chart(
+        [item['is_returnee_value'] for item in returnee_counts],
+        [item['count'] for item in returnee_counts],
+        'Returnee Status Distribution'
+    )
+
+    status_chart = create_bar_chart(
+        [item['status_value'] for item in status_counts],
+        [item['count'] for item in status_counts],
+        'Student Status Distribution'
+    )
+
+    # Add charts to context
     context = {
-        'strand_counts': strand_counts,
-        'economic_counts': economic_counts,
-        'religion_counts': religion_counts,
-        'dropout_counts': dropout_counts,
-        'working_student_counts': working_student_counts,
-        'scholarship_counts': scholarship_counts,
-        'sex_counts': sex_counts,
-        'returnee_counts': returnee_counts,
-        'status_counts': status_counts,
+        'strand_chart': strand_chart.to_html(full_html=False, include_plotlyjs='cdn'),
+        'economic_chart': economic_chart.to_html(full_html=False, include_plotlyjs='cdn'),
+        'religion_chart': religion_chart.to_html(full_html=False, include_plotlyjs='cdn'),
+        'dropout_chart': dropout_chart.to_html(full_html=False, include_plotlyjs='cdn'),
+        'working_student_chart': working_student_chart.to_html(full_html=False, include_plotlyjs='cdn'),
+        'scholarship_chart': scholarship_chart.to_html(full_html=False, include_plotlyjs='cdn'),
+        'sex_chart': sex_chart.to_html(full_html=False, include_plotlyjs='cdn'),
+        'returnee_chart': returnee_chart.to_html(full_html=False, include_plotlyjs='cdn'),
+        'status_chart': status_chart.to_html(full_html=False, include_plotlyjs='cdn'),
+        'selected_gradelevel': selected_gradelevel,
+        'current_datetime': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'gradelevels': Gradelevel.objects.all(),
+        'user_is_teacher': request.user.groups.filter(name='TEACHER').exists(),
+        'selected_filter_name': 'My Classroom' if selected_gradelevel == 'myclassroom' else 'All Grade Levels',
+        'values': request.GET,
     }
 
     return render(request, 'pages/reports.html', context)

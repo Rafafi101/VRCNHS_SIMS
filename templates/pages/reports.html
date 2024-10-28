@@ -5,5 +5,114 @@
 {% block title %} | Reports {% endblock title %}
 
 {% block content %}
-<h1> REPORTS</h1>
+
+    <!-- page head -->
+    <section id="showcase-inner" class="py-2 text-white">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <div class="overlay p-4">
+                        <div class="filter">
+                            <h1 class="display-4">Filter Reports</h1>
+                            <form method="GET" action="{% url 'reports' %}" class="d-flex w-100" id="filterForm">
+                                <div class="flex-grow-1">
+                                    <select name="gradelevel" id="gradelevelDropdown" class="form-control" value="{{ values.gradelevel }}">
+                                        {% if user_is_teacher %}
+                                            <option value="myclassroom" {% if values.gradelevel == "myclassroom" %}selected{% endif %}>My Classroom</option>
+                                        {% endif %}
+                                        <option value="all" {% if values.gradelevel == "all" %}selected{% endif %}>All Grade Levels</option>
+                                        {% for gradelevel in gradelevels %}
+                                            <option value="{{ gradelevel.id }}" {% if values.gradelevel == gradelevel.id|stringformat:"s" %}selected{% endif %}>
+                                                {{ gradelevel.gradelevel }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="flex-shrink-0 ms-2">
+                                    <button class="btn btn-primary search-button-home" type="submit-search">Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<div class="container">
+    
+    <div class="chart-container">
+        <div class="chart-box">
+            <h2>Academic Strand Distribution</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="strand_chart">{{ strand_chart|safe }}</div>
+            {% endautoescape %}
+        </div>
+        
+        <div class="chart-box">
+            <h2>Household Status</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="economic_chart">{{ economic_chart|safe }}</div>
+            {% endautoescape %}
+        </div>
+
+        <div class="chart-box">
+            <h2>Religion</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="religion_chart">{{ religion_chart|safe }}</div>
+            {% endautoescape %}
+        </div>
+
+        <div class="chart-box">
+            <h2>Dropout Status Distribution</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="dropout_chart">{{ dropout_chart|safe }}</div>
+            {% endautoescape %}
+        </div>
+
+        <div class="chart-box">
+            <h2>Working Student Distribution</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="working_student_chart">{{ working_student_chart|safe }}</div>
+            {% endautoescape %}
+        </div>
+
+        <div class="chart-box">
+            <h2>4P's Scholars</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="scholarship_chart">{{ scholarship_chart|safe }}</div>
+            {% endautoescape %}
+        </div>
+
+        <div class="chart-box">
+            <h2>Gender Distribution</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="sex_chart">{{ sex_chart|safe }}</div>
+            {% endautoescape %}
+        </div>
+
+        <div class="chart-box">
+            <h2>Student Status Distribution</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="status_chart">{{ status_chart|safe }}</div>
+            {% endautoescape %}
+        </div>
+
+        <div class="chart-box">
+            <h2>Returnees</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="returnee_chart">{{ returnee_chart|safe }}</div>
+            {% endautoescape %}
+        </div>
+    </div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</div>
 {% endblock %}
