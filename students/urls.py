@@ -12,5 +12,6 @@ urlpatterns = [
     path('search', views.search_student, name='search_student'),
     path('bulk_promote/', views.bulk_promote_students,
          name='bulk_promote_students'),
-
+    path('assign_classroom_bulk/<str:grade>/',
+         views.assign_classroom_bulk, name='assign_classroom_bulk'),
 ]

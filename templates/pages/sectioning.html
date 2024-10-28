@@ -36,7 +36,7 @@
     <div id="grade8" class="table-container mb-5">
         <center>
             <h2>Incoming Grade 8 Students</h2>
-            <form action="#" method="post" id="form-grade8">
+            <form action="{% url 'assign_classroom_bulk' 'Grade 8' %}" method="post" id="form-grade8">
                 {% csrf_token %}
                 <div class="table-responsive">
                     <table class="student-table table-striped" id="student-table-grade8">
@@ -84,7 +84,7 @@
     <div id="grade9" class="table-container mb-5">
         <center>
             <h2>Incoming Grade 9 Students</h2>
-            <form action="#" method="post" id="form-grade9">
+            <form action="{% url 'assign_classroom_bulk' 'Grade 9' %}% url 'assign_classroom_bulk' 'Grade 9' %}" method="post" id="form-grade9">
                 {% csrf_token %}
                 <div class="table-responsive">
                     <table class="student-table table-striped" id="student-table-grade9">
@@ -132,7 +132,7 @@
     <div id="grade10" class="table-container mb-5">
         <center>
             <h2>Incoming Grade 10 Students</h2>
-            <form action="#" method="post" id="form-grade10">
+            <form action="{% url 'assign_classroom_bulk' 'Grade 10' %}" method="post" id="form-grade10">
                 {% csrf_token %}
                 <div class="table-responsive">
                     <table class="student-table table-striped" id="student-table-grade10">
@@ -180,7 +180,7 @@
     <div id="grade11" class="table-container mb-5">
         <center>
             <h2>Incoming Grade 11 Students</h2>
-            <form action="#" method="post" id="form-grade11">
+            <form action="{% url 'assign_classroom_bulk' 'Grade 11' %}" method="post" id="form-grade11">
                 {% csrf_token %}
                 <div class="table-responsive">
                     <table class="student-table table-striped" id="student-table-grade11">
@@ -228,7 +228,7 @@
     <div id="grade12" class="table-container mb-5">
         <center>
             <h2>Incoming Grade 12 Students</h2>
-            <form action="#" method="post" id="form-grade12">
+            <form action="{% url 'assign_classroom_bulk' 'Grade 12' %}" method="post" id="form-grade12">
                 {% csrf_token %}
                 <div class="table-responsive">
                     <table class="student-table table-striped" id="student-table-grade12">

@@ -329,3 +329,111 @@ def update_student_promotion_data(student, current_grade, classroom, user):
         student.g12_section = classroom.classroom
         student.g12_general_average = student.general_average
         student.g12_adviser = f"{user.first_name} {user.last_name}"
+
+
+def sectioning(request):
+    # Filter students who are either 'For Promotion' or 'For Retention' and are in the "SECTIONING" classroom
+    query_conditions = Q(
+        (Q(status='For Promotion') | Q(status='For Retention')) &
+        Q(classroom__classroom='SECTIONING')
+    )
+
+    # Get students per grade level individually
+    students_grade_8 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 8')
+    students_grade_9 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 9')
+    students_grade_10 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 10')
+    students_grade_11 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 11')
+    students_grade_12 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 12')
+
+    # Filter students for departure based on status
+    for_departure = Student.objects.filter(
+        Q(status='For Graduation') | Q(
+            status='For Dropout') | Q(status='For Transfer')
+    )
+
+    # Assuming you have a predefined list of grade levels
+    grade_levels = Gradelevel.objects.all()
+    grade_level_classrooms = {grade.id: Classroom.objects.filter(
+        gradelevel=grade) for grade in grade_levels}
+
+    # Add classroom options to each student
+    for student in students_grade_8:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    for student in students_grade_9:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    for student in students_grade_10:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    for student in students_grade_11:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    for student in students_grade_12:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    # Prepare context data with the updated queries
+    context = {
+        'students_grade_8': students_grade_8,
+        'students_grade_9': students_grade_9,
+        'students_grade_10': students_grade_10,
+        'students_grade_11': students_grade_11,
+        'students_grade_12': students_grade_12,
+        'for_departure': for_departure,
+    }
+
+    return render(request, 'pages/sectioning.html', context)
+
+
+def assign_classroom_bulk(request, grade):
+    if request.method == 'POST':
+        # List to store student LRNs for updating status
+        student_lrns = []
+
+        for key, value in request.POST.items():
+            if key.startswith('classroom_'):
+                student_lrn_str = key.split('_')[1]
+                classroom_id = value
+
+                try:
+                    # Convert LRN to string for comparison
+                    student = Student.objects.get(LRN=str(student_lrn_str))
+                    classroom = Classroom.objects.get(id=classroom_id)
+                    student.classroom = classroom
+                    student.status = 'Currently Enrolled'  # Update status to "Currently Enrolled"
+                    student.general_average = None
+                    student.save()
+                    student_lrns.append(student_lrn_str)  # Use LRN_str here
+
+                except Student.DoesNotExist:
+                    messages.warning(request, f"Student with LRN {
+                                     student_lrn_str} does not exist. Skipping.")
+                    continue
+
+                except Classroom.DoesNotExist:
+                    messages.warning(request, f"Classroom with ID {
+                                     classroom_id} does not exist. Skipping.")
+                    continue
+
+        # Update status for all selected students
+        Student.objects.filter(LRN__in=student_lrns).update(
+            status='Currently Enrolled')
+
+        messages.success(
+            request, 'Students assigned to classrooms successfully.')
+        return redirect('sectioning')  # Redirect back to the sectioning page
