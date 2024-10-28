@@ -10,4 +10,7 @@ urlpatterns = [
     path('add/', views.add_student, name='add_student'),
     path('delete/<int:lrn>/', views.delete_student, name='delete_student'),
     path('search', views.search_student, name='search_student'),
+    path('bulk_promote/', views.bulk_promote_students,
+         name='bulk_promote_students'),
+
 ]

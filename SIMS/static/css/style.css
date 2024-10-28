@@ -792,3 +792,139 @@ img {
   padding-top: 0;            /* Removes any top padding for better alignment */
   padding-bottom: 0;         /* Removes any bottom padding for better alignment */
 }
+
+/* TEACHER PAGE UNIQUE */
+
+
+/* Unique Container for Cards */
+.unique-card-container {
+  display: flex;
+  flex-wrap: wrap; /* Wrap cards to the next line if necessary */
+  gap: 20px; /* Space between cards */
+  padding: 20px 0; /* Padding around the container */
+  justify-content: space-between; /* Distribute cards evenly */
+}
+
+/* Unique Card Styling */
+.unique-card {
+  flex: 1 1 calc(25% - 20px); /* Each card takes 25% of the row minus the gap, adjusting for smaller screens */
+  background: #ffffff; /* White background for contrast */
+  border: 1px solid #ddd; /* Border for visual distinction */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Padding inside the card */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  text-align: center; /* Center-align all content for consistency */
+  max-width: 270px; /* Ensure cards don't get too wide */
+}
+
+/* Unique Text Styling */
+.unique-dynamic-text {
+  font-size: 1.4em;
+  color: #333;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+/* Card Description Styling */
+.unique-card-description {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+/* Unique Button Styling */
+.unique-btn-primary {
+  background-color: #28a745; /* Green color */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.unique-btn-primary:hover {
+  background-color: #218838; /* Darker green for hover effect */
+}
+
+.unique-btn-success {
+  background-color: #007bff; /* Blue color */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.unique-btn-success:hover {
+  background-color: #0056b3; /* Darker blue for hover effect */
+}
+
+/* Unique Export Button */
+.unique-export-button {
+  background-color: #fd7e14; /* Orange color */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.unique-export-button:hover {
+  background-color: #e36d09; /* Darker orange for hover effect */
+}
+
+/* File Upload Styling */
+.unique-custom-file {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.unique-custom-file-input {
+  width: 100%;
+  padding: 5px;
+  font-size: 0.9em;
+}
+
+.unique-custom-file-label {
+  display: block;
+  margin-top: 5px;
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1200px) {
+  .unique-card {
+      flex: 1 1 calc(33.3% - 20px); /* Three cards per row for medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .unique-card {
+      flex: 1 1 calc(50% - 20px); /* Two cards per row for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .unique-card {
+      flex: 1 1 calc(100% - 20px); /* One card per row for very small screens */
+  }
+}

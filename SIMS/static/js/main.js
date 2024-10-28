@@ -34,6 +34,12 @@ $.getScript("https://code.jquery.com/jquery-3.6.4.min.js", function() {
             $('#classroom-table-10').DataTable({});
             $('#classroom-table-11').DataTable({});
             $('#classroom-table-12').DataTable({});
+            $('#student-table-grade8').DataTable({});
+            $('#student-table-grade9').DataTable({});
+            $('#student-table-grade10').DataTable({});
+            $('#student-table-grade11').DataTable({});
+            $('#student-table-grade12').DataTable({});
+            $('#for-departure').DataTable({});
 
         });
     });
@@ -51,5 +57,26 @@ $('#datepicker').datepicker({
     autoclose: true,
     todayHighlight: true
 });
+});
+
+document.getElementById("confirmBulkPromoteButton").addEventListener("click", function () {
+    $.ajax({
+        url: "{% url 'bulk_promote_students' %}",
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        success: function(response) {
+            if (response.success) {
+                // Reload the page to reflect changes
+                location.reload();
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            alert("An error occurred while promoting students.");
+        }
+    });
 });
 

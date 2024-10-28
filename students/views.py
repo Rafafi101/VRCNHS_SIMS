@@ -1,15 +1,17 @@
 from django.forms import model_to_dict
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.shortcuts import get_object_or_404, render
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.db.models import Q
+import logging
+
 
 from .forms import AdminTeacherStudentForm, EditStudentForm, AddStudentForm, SpecifiClassroomForm
 from .models import Student
 from accounts.models import Teacher
-from classrooms.models import Classroom
+from classrooms.models import Classroom, Gradelevel
 
 
 def index(request):
@@ -185,3 +187,145 @@ def delete_student(request, lrn):
     else:
         # Redirect to "students" if the user is not a teacher
         return redirect("students")
+
+
+logger = logging.getLogger(__name__)
+
+
+def get_next_grade(current_grade):
+    grade_sequence = ['Grade 7', 'Grade 8',
+                      'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12']
+    try:
+        current_index = grade_sequence.index(current_grade)
+        next_index = current_index + 1
+        if next_index < len(grade_sequence):
+            return grade_sequence[next_index]
+        else:
+            return None  # No next grade (end of sequence)
+    except ValueError:
+        return None  # Current grade not found in the sequence
+
+
+def bulk_promote_students(request):
+    response_data = {'success': False, 'message': 'Failed to promote students'}
+
+    if not request.user.groups.filter(name='TEACHER').exists():
+        messages.error(
+            request, "You don't have permission to promote students.")
+        return redirect('teacher_page')
+
+    # Check if there are students with the status "Currently Enrolled"
+    if Student.objects.filter(classroom__teacher__user=request.user, status='Currently Enrolled').exists():
+        messages.error(
+            request, 'No student should have a status of "Currently Enrolled" anymore if you want to Promote in Bulk.')
+        return redirect('teacher_page')
+
+    if request.method == 'POST':
+        try:
+            # Retrieve the teacher instance for the current user
+            try:
+                teacher_instance = Teacher.objects.get(user=request.user)
+            except Teacher.DoesNotExist:
+                messages.error(
+                    request, 'No teacher profile found for the current user.')
+                return redirect('teacher_page')
+
+            # Find students associated with the teacher by filtering students through the classroom
+            students_to_promote = Student.objects.filter(
+                classroom__teacher=teacher_instance)
+
+            if not students_to_promote.exists():
+                # If no students are found, raise an error message
+                logger.error(
+                    "No students found for the current teacher's classroom.")
+                response_data['message'] = 'No students are associated with your classroom.'
+                messages.error(request, response_data['message'])
+                return redirect('teacher_page')
+
+            # Assuming all students belong to the same grade level since they are in the same classroom
+            user_classroom = students_to_promote.first().classroom
+            current_grade = user_classroom.gradelevel.gradelevel
+
+            # Determine the next grade level based on the teacher's current grade level
+            next_grade = get_next_grade(current_grade)
+
+            if next_grade is None:
+                # If there's no next grade, the student is in Grade 12 and will be moved to "FOR DEPARTURE"
+                next_grade_instance = Gradelevel.objects.get(
+                    gradelevel='Grade 12')
+                next_classroom = Classroom.objects.get(
+                    gradelevel=next_grade_instance, classroom='FOR DEPARTURE')
+            else:
+                # For students being promoted to the next grade level, they will go to the "SECTIONING" classroom
+                next_grade_instance = Gradelevel.objects.get(
+                    gradelevel=next_grade)
+                next_classroom = Classroom.objects.get(
+                    gradelevel=next_grade_instance, classroom='SECTIONING')
+
+            for student in students_to_promote:
+                # Store current classroom name
+                student.previous_section = str(student.classroom)
+
+                if student.status == 'For Promotion':
+                    # Update student details for promotion
+                    update_student_promotion_data(
+                        student, current_grade, user_classroom, request.user)
+                    student.gradelevel = next_grade_instance
+                    student.classroom = next_classroom
+
+                elif student.status == 'For Retention':
+                    # Update student details for retention, keep the same grade level but assign SECTIONING classroom
+                    update_student_promotion_data(
+                        student, current_grade, user_classroom, request.user)
+                    student.classroom = Classroom.objects.get(
+                        gradelevel__gradelevel=current_grade, classroom='SECTIONING')
+
+                elif student.status in ['For Graduation', 'For Dropout', 'For Transfer']:
+                    # Students with these statuses will be assigned to the "FOR DEPARTURE" classroom in Grade Level 12
+                    student.classroom = Classroom.objects.get(
+                        gradelevel__gradelevel='Grade 12', classroom='FOR DEPARTURE')
+
+                student.save()
+
+            response_data['success'] = True
+            response_data['message'] = f'Bulk promotion to {
+                next_grade if next_grade else "Grade 12 FOR DEPARTURE"} successful!'
+            messages.success(request, response_data['message'])
+
+            return redirect('teacher_page')
+
+        except Exception as e:
+            logger.error(f"An error occurred during bulk promotion: {str(e)}")
+            response_data['message'] = f"Failed to promote students: {str(e)}"
+            messages.error(request, response_data['message'])
+            return redirect('teacher_page')
+
+    return redirect('teacher_page')
+
+
+def update_student_promotion_data(student, current_grade, classroom, user):
+    """Helper function to update student data for promotion or retention"""
+    if current_grade == 'Grade 7':
+        student.g7_section = classroom.classroom
+        student.g7_general_average = student.general_average
+        student.g7_adviser = f"{user.first_name} {user.last_name}"
+    elif current_grade == 'Grade 8':
+        student.g8_section = classroom.classroom
+        student.g8_general_average = student.general_average
+        student.g8_adviser = f"{user.first_name} {user.last_name}"
+    elif current_grade == 'Grade 9':
+        student.g9_section = classroom.classroom
+        student.g9_general_average = student.general_average
+        student.g9_adviser = f"{user.first_name} {user.last_name}"
+    elif current_grade == 'Grade 10':
+        student.g10_section = classroom.classroom
+        student.g10_general_average = student.general_average
+        student.g10_adviser = f"{user.first_name} {user.last_name}"
+    elif current_grade == 'Grade 11':
+        student.g11_section = classroom.classroom
+        student.g11_general_average = student.general_average
+        student.g11_adviser = f"{user.first_name} {user.last_name}"
+    elif current_grade == 'Grade 12':
+        student.g12_section = classroom.classroom
+        student.g12_general_average = student.general_average
+        student.g12_adviser = f"{user.first_name} {user.last_name}"

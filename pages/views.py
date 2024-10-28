@@ -240,3 +240,72 @@ def reports(request):
     }
 
     return render(request, 'pages/reports.html', context)
+
+
+def sectioning(request):
+    # Filter students who are either 'For Promotion' or 'For Retention' and are in the "SECTIONING" classroom
+    query_conditions = Q(
+        (Q(status='For Promotion') | Q(status='For Retention')) &
+        Q(classroom__classroom='SECTIONING')
+    )
+
+    # Get students per grade level individually
+    students_grade_8 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 8')
+    students_grade_9 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 9')
+    students_grade_10 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 10')
+    students_grade_11 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 11')
+    students_grade_12 = Student.objects.filter(
+        query_conditions, classroom__gradelevel__gradelevel='Grade 12')
+
+    # Filter students for departure based on status
+    for_departure = Student.objects.filter(
+        Q(status='For Graduation') | Q(
+            status='For Dropout') | Q(status='For Transfer')
+    )
+
+    # Assuming you have a predefined list of grade levels
+    grade_levels = Gradelevel.objects.all()
+    grade_level_classrooms = {grade.id: Classroom.objects.filter(
+        gradelevel=grade) for grade in grade_levels}
+
+    # Add classroom options to each student
+    for student in students_grade_8:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    for student in students_grade_9:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    for student in students_grade_10:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    for student in students_grade_11:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    for student in students_grade_12:
+        student.classroom_options = grade_level_classrooms.get(
+            student.classroom.gradelevel.id, [])
+        student.LRN_str = str(student.LRN)
+
+    # Prepare context data with the updated queries
+    context = {
+        'students_grade_8': students_grade_8,
+        'students_grade_9': students_grade_9,
+        'students_grade_10': students_grade_10,
+        'students_grade_11': students_grade_11,
+        'students_grade_12': students_grade_12,
+        'for_departure': for_departure,
+    }
+
+    return render(request, 'pages/sectioning.html', context)

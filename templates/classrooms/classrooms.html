@@ -50,6 +50,7 @@
                                 <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
                             </td>
                             <td>
+                                {{ classroom.teacher }}
                                 <!-- Teacher Selection Form -->
                                 <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
                                     {% csrf_token %}
@@ -102,6 +103,7 @@
                                 <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
                             </td>
                             <td>
+                                {{ classroom.teacher }}
                                 <!-- Teacher Selection Form -->
                                 <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
                                     {% csrf_token %}
@@ -154,6 +156,7 @@
                                 <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
                             </td>
                             <td>
+                                {{ classroom.teacher }}
                                 <!-- Teacher Selection Form -->
                                 <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
                                     {% csrf_token %}
@@ -206,6 +209,7 @@
                                 <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
                             </td>
                             <td>
+                                {{ classroom.teacher }}
                                 <!-- Teacher Selection Form -->
                                 <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
                                     {% csrf_token %}
@@ -258,6 +262,7 @@
                                 <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
                             </td>
                             <td>
+                                {{ classroom.teacher }}
                                 <!-- Teacher Selection Form -->
                                 <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
                                     {% csrf_token %}
@@ -310,6 +315,7 @@
                                 <a href="{% url 'classroom' classroom.id %}">{{ classroom.classroom }}</a>
                             </td>
                             <td>
+                                {{ classroom.teacher }}
                                 <!-- Teacher Selection Form -->
                                 <form action="{% url 'assign_teacher' classroom.id %}" method="POST" class="d-inline-block teacher-form">
                                     {% csrf_token %}

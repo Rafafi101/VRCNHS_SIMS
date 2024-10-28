@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} | Student Promotion {% endblock title %}
+
+{% block head_block %}
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="py-2 text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h1 class="display-4">Student Promotion</h1>
+                <h6>
+                    <a href="#grade8">Grade 8</a> | <a href="#grade9">Grade 9</a> | 
+                    <a href="#grade10">Grade 10</a> | <a href="#grade11">Grade 11</a> | 
+                    <a href="#grade12">Grade 12</a> | <a href="#for_Departure">Departure</a>
+                </h6>
+            </div>
+        </div>
+    </div>
+</section>
+<br>
+
+<!-- Alerts -->
+{% include 'partials/_alerts.html' %}
+
+<div class="container">
+
+    <!-- Grade 8 Table -->
+    <div id="grade8" class="table-container mb-5">
+        <center>
+            <h2>Incoming Grade 8 Students</h2>
+            <form action="#" method="post" id="form-grade8">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="student-table table-striped" id="student-table-grade8">
+                        <thead>
+                            <tr>
+                                <th>LRN</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Previous Section</th>
+                                <th>Grade & Section</th>
+                                <th>General Average</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students_grade_8 %}
+                            <tr>
+                                <td>{{ student.LRN }}</td>
+                                <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                                <td>{{ student.status }}</td>
+                                <td>{{ student.previous_section }}</td>
+                                <td>
+                                    {{ student.classroom.gradelevel.gradelevel }} {{ student.classroom }}
+                                    <select name="classroom_{{ student.LRN_str }}" class="form-select form-select-sm" required>
+                                        <option value="">Select a classroom</option>
+                                        {% for classroom in student.classroom_options %}
+                                            <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>{{ classroom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>{{ student.general_average }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <center>
+                    <button type="submit" class="btn btn-primary">Assign Classrooms for Grade 8</button>
+                </center>
+            </form>
+        </center>
+    </div>
+
+    <!-- Grade 9 Table -->
+    <div id="grade9" class="table-container mb-5">
+        <center>
+            <h2>Incoming Grade 9 Students</h2>
+            <form action="#" method="post" id="form-grade9">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="student-table table-striped" id="student-table-grade9">
+                        <thead>
+                            <tr>
+                                <th>LRN</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Previous Section</th>
+                                <th>Grade & Section</th>
+                                <th>General Average</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students_grade_9 %}
+                            <tr>
+                                <td>{{ student.LRN }}</td>
+                                <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                                <td>{{ student.status }}</td>
+                                <td>{{ student.previous_section }}</td>
+                                <td>
+                                    {{ student.classroom.gradelevel.gradelevel }} {{ student.classroom }}
+                                    <select name="classroom_{{ student.LRN_str }}" class="form-select form-select-sm" required>
+                                        <option value="">Select a classroom</option>
+                                        {% for classroom in student.classroom_options %}
+                                            <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>{{ classroom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>{{ student.general_average }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <center>
+                    <button type="submit" class="btn btn-primary">Assign Classrooms for Grade 9</button>
+                </center>
+            </form>
+        </center>
+    </div>
+
+    <!-- Grade 10 Table -->
+    <div id="grade10" class="table-container mb-5">
+        <center>
+            <h2>Incoming Grade 10 Students</h2>
+            <form action="#" method="post" id="form-grade10">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="student-table table-striped" id="student-table-grade10">
+                        <thead>
+                            <tr>
+                                <th>LRN</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Previous Section</th>
+                                <th>Grade & Section</th>
+                                <th>General Average</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students_grade_10 %}
+                            <tr>
+                                <td>{{ student.LRN }}</td>
+                                <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                                <td>{{ student.status }}</td>
+                                <td>{{ student.previous_section }}</td>
+                                <td>
+                                    {{ student.classroom.gradelevel.gradelevel }} {{ student.classroom }}
+                                    <select name="classroom_{{ student.LRN_str }}" class="form-select form-select-sm" required>
+                                        <option value="">Select a classroom</option>
+                                        {% for classroom in student.classroom_options %}
+                                            <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>{{ classroom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>{{ student.general_average }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <center>
+                    <button type="submit" class="btn btn-primary">Assign Classrooms for Grade 10</button>
+                </center>
+            </form>
+        </center>
+    </div>
+
+    <!-- Grade 11 Table -->
+    <div id="grade11" class="table-container mb-5">
+        <center>
+            <h2>Incoming Grade 11 Students</h2>
+            <form action="#" method="post" id="form-grade11">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="student-table table-striped" id="student-table-grade11">
+                        <thead>
+                            <tr>
+                                <th>LRN</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Previous Section</th>
+                                <th>Grade & Section</th>
+                                <th>General Average</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students_grade_11 %}
+                            <tr>
+                                <td>{{ student.LRN }}</td>
+                                <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                                <td>{{ student.status }}</td>
+                                <td>{{ student.previous_section }}</td>
+                                <td>
+                                    {{ student.classroom.gradelevel.gradelevel }} {{ student.classroom }}
+                                    <select name="classroom_{{ student.LRN_str }}" class="form-select form-select-sm" required>
+                                        <option value="">Select a classroom</option>
+                                        {% for classroom in student.classroom_options %}
+                                            <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>{{ classroom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>{{ student.general_average }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <center>
+                    <button type="submit" class="btn btn-primary">Assign Classrooms for Grade 11</button>
+                </center>
+            </form>
+        </center>
+    </div>
+
+    <!-- Grade 12 Table -->
+    <div id="grade12" class="table-container mb-5">
+        <center>
+            <h2>Incoming Grade 12 Students</h2>
+            <form action="#" method="post" id="form-grade12">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="student-table table-striped" id="student-table-grade12">
+                        <thead>
+                            <tr>
+                                <th>LRN</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Previous Section</th>
+                                <th>Grade & Section</th>
+                                <th>General Average</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students_grade_12 %}
+                            <tr>
+                                <td>{{ student.LRN }}</td>
+                                <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                                <td>{{ student.status }}</td>
+                                <td>{{ student.previous_section }}</td>
+                                <td>
+                                    {{ student.classroom.gradelevel.gradelevel }} {{ student.classroom }}
+                                    <select name="classroom_{{ student.LRN_str }}" class="form-select form-select-sm" required>
+                                        <option value="">Select a classroom</option>
+                                        {% for classroom in student.classroom_options %}
+                                            <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>{{ classroom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>{{ student.general_average }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <center>
+                    <button type="submit" class="btn btn-primary">Assign Classrooms for Grade 12</button>
+                </center>
+            </form>
+        </center>
+    </div>
+
+    <!-- Students for Departure -->
+    <div id="for_Departure" class="table-container">
+        <center>
+            <h2>Students for Departure</h2>
+            <div class="table-responsive">
+                <table class="student-table table-striped" id="for-departure">
+                    <thead>
+                        <tr>
+                            <th>LRN</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Previous Section</th>
+                            <th>Grade & Section</th>
+                            <th>General Average</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in for_departure %}
+                        <tr>
+                            <td>{{ student.LRN }}</td>
+                            <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                            <td>{{ student.status }}</td>
+                            <td>{{ student.previous_section }}</td>
+                            <td>{{ student.classroom.gradelevel.gradelevel }} {{ student.classroom }}</td>
+                            <td>{{ student.general_average }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <a href="#" class="btn btn-danger">Export and Delete</a>
+        </center>
+        <br>
+    </div>
+</div>
+
+<!-- Add DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.student-table').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true
+        });
+    });
+</script>
+
+{% endblock content %}
