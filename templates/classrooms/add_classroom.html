@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} | Add Classroom {% endblock title %}
+
+{% block head_block %}
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div>
+        <div class="d-flex justify-content-center align-items-center vh-100">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h2>Add Classroom</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'add_classroom' %}">
+                        {% csrf_token %}
+
+                        <div class="form-group mb-3">
+                            <label for="classroom_name">Classroom Name:</label>
+                            <input type="text" name="classroom_name" id="classroom_name" class="form-control" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="gradelevel_id">Grade Level:</label>
+                            <select name="gradelevel_id" id="gradelevel_id" class="form-control" required>
+                                {% for gradelevel in gradelevels %}
+                                    <option value="{{ gradelevel.id }}">{{ gradelevel.gradelevel }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="teacher_id">Assign Teacher:</label>
+                            <select name="teacher_id" id="teacher_id" class="form-control">
+                                <option value="">None</option>
+                                {% for teacher in teachers %}
+                                    <option value="{{ teacher.id }}">{{ teacher.last_name }}, {{ teacher.first_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-primary mb-3">Add Classroom</button>
+                            <a href="{% url 'classrooms' %}" class="btn btn-secondary">Back to View Classrooms</a>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
