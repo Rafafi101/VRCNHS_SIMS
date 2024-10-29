@@ -11,5 +11,9 @@ urlpatterns = [
          name='export_classroom_students'),
     path('export_and_delete_students_for_departure/', views.export_and_delete_students_for_departure,
          name='export_and_delete_students_for_departure'),
+    path('import_classrooms/', views.import_classrooms_from_excel,
+         name='import_classrooms'),
+    path('export_classrooms/', views.export_classrooms_to_excel,
+         name='export_classrooms'),
 
 ]

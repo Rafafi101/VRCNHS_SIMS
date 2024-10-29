@@ -1,5 +1,6 @@
 from io import BytesIO
 import os
+import pandas as pd
 from django.db import IntegrityError
 from django.http import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -12,10 +13,9 @@ from openpyxl.styles import NamedStyle
 from openpyxl.utils import get_column_letter
 from accounts.models import Teacher
 from students.models import Student
-from classrooms.models import Classroom
+from classrooms.models import Classroom, Gradelevel
 import datetime
 from django.db.models import Q
-
 from django.contrib.auth.models import Group
 from classrooms.models import Classroom
 from django.core.exceptions import PermissionDenied
@@ -526,3 +526,98 @@ def export_and_delete_students_for_departure(request):
             request, "An error occurred while exporting data to Excel. Please try again.")
         # Redirect to sectioning page in case of an error
         return redirect('sectioning')
+
+
+def export_classrooms_to_excel(request):
+    try:
+        # Retrieve classrooms along with their grade level and teacher information
+        classrooms = Classroom.objects.select_related(
+            'gradelevel', 'teacher').all()
+
+        # Prepare the data for export
+        data = []
+        for classroom in classrooms:
+            data.append({
+                'Classroom': classroom.classroom,
+                'Grade Level': classroom.gradelevel.gradelevel if classroom.gradelevel else 'N/A',
+                'Teacher': f"{classroom.teacher.last_name}, {classroom.teacher.first_name}" if classroom.teacher else 'N/A',
+            })
+
+        # Create DataFrame from data
+        df = pd.DataFrame(data)
+
+        # Convert DataFrame to Excel
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="classrooms_data.xlsx"'
+
+        with pd.ExcelWriter(response, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Classrooms')
+
+        return response
+
+    except Exception as e:
+        print(f"Error exporting classrooms: {str(e)}")
+        messages.error(
+            request, "An error occurred while exporting classrooms to Excel. Please try again.")
+        return redirect('classrooms')
+
+
+def import_classrooms_from_excel(request):
+    if request.method == 'POST':
+        new_classroom_file = request.FILES['myfile']
+
+        # Check if the uploaded file is an Excel file
+        if not new_classroom_file.name.endswith('xlsx'):
+            messages.error(request, 'Please upload an Excel file only (.xlsx)')
+            return redirect('classrooms')
+
+        try:
+            # Load the workbook and the first sheet
+            wb = load_workbook(new_classroom_file)
+            sheet = wb.active
+
+            successfully_imported = 0
+
+            # Loop through each row in the sheet starting from the second row
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                classroom_name, grade_level_name, teacher_name = row
+
+                # Retrieve or create the grade level instance
+                grade_level, _ = Gradelevel.objects.get_or_create(
+                    gradelevel=grade_level_name)
+
+                # Retrieve the teacher instance if available
+                teacher = None
+                if teacher_name and teacher_name != 'N/A':
+                    last_name, first_name = teacher_name.split(', ')
+                    try:
+                        teacher = Teacher.objects.get(
+                            last_name=last_name.strip(), first_name=first_name.strip())
+                    except Teacher.DoesNotExist:
+                        messages.warning(request, f"Teacher {
+                                         teacher_name} does not exist. Skipping row.")
+                        continue
+
+                # Create or update the classroom instance with refined uniqueness criteria
+                classroom, created = Classroom.objects.update_or_create(
+                    classroom=classroom_name,
+                    gradelevel=grade_level,
+                    defaults={
+                        'teacher': teacher
+                    }
+                )
+
+                successfully_imported += 1
+
+            messages.success(request, f"Successfully imported {
+                             successfully_imported} classroom(s) into the database.")
+
+        except Exception as e:
+            print(f"Error importing classrooms: {str(e)}")
+            messages.error(
+                request, f"An error occurred while importing classrooms from the file: {str(e)}")
+
+        return redirect('classrooms')
+
+    return redirect('classrooms')

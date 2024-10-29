@@ -347,33 +347,30 @@
             </div>
         </center>
     </div>
-
-    <!-- IMPORT -->
-    <div class="card">
-        <h1 class="dynamic-text"><b>Import Classrooms</b></h1>
-        <!-- Import instructions and download link for template -->
-        <h6>Import classrooms using Excel (.xlsx) files. Please use <a href="#" download>This Template</a> before uploading below.</h6>
-
-        <!-- Original form structure -->
-        <form method="post" enctype="multipart/form-data" action="#">
-            {% csrf_token %}
-            
-            <!-- Custom file input field -->
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile" name="myfile" required>
-                <label class="custom-file-label" for="customFile">Choose file</label>
-            </div>
-
-            <!-- Upload button -->
-            <button type="submit" class="btn btn-primary mt-3">Upload</button>
-        </form>
+    <div class="unique-card-container"> 
+        <div class="unique-card">
+            <h1 class="unique-dynamic-text"><b>Export all Classrooms</b></h1>
+            <p class="unique-card-description">EXPORT Classrooms as a template for the Importing of classrooms</p>
+            <a href="{% url 'export_classrooms' %}">
+                <button type="button" class="unique-export-button">
+                    EXPORT
+                </button>
+            </a>
+        </div>
+        <!-- IMPORT -->
+        <div class="unique-card">
+            <h1 class="unique-dynamic-text"><b>Import Classrooms</b></h1>
+            <form method="post" action="{% url 'import_classrooms' %}" enctype="multipart/form-data" >
+                {% csrf_token %}
+                <div class="unique-custom-file">
+                    <input type="file" class="unique-custom-file-input" id="customFile" name="myfile" required>
+                    <small class="form-text text-muted">Please use the exported file provided and make sure all required fields are filled correctly.</small>
+                    <button type="submit" class="unique-btn-primary mt-3">Upload</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <br>
-    <a href="#" class="btn btn-success" style="margin-left: 10px;">
-        Export Classrooms to Excel
-    </a>
-    
 </center>
 <br>
 
