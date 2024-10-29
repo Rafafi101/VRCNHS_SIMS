@@ -1,10 +1,14 @@
+import os
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from openpyxl import load_workbook
 from tablib import Dataset
 from dateutil import parser as date_parser
 import tablib
+from openpyxl.styles import NamedStyle
+from openpyxl.utils import get_column_letter
 from students.models import Student
 from classrooms.models import Classroom
 import datetime
@@ -178,24 +182,104 @@ def import_students(request):
     return render(request, 'students')
 
 
-def export_all_students(request):
-    students = Student.objects.all()
-    dataset = tablib.Dataset()
-    dataset.headers = ['LRN', 'Last Name', 'First Name',
-                       'Middle Name', 'Birthday', 'Classroom', 'General Average']
+def export_students_to_excel(request):
+    try:
+        # Fetch all student data
+        students = Student.objects.all()
 
-    for student in students:
-        dataset.append([
-            student.LRN,
-            student.last_name,
-            student.first_name,
-            student.middle_name,
-            student.birthday,
-            student.classroom.classroom if student.classroom else 'N/A',
-            student.general_average
-        ])
+        # Load the template workbook from the new location
+        template_path = os.path.join(
+            'SIMS/static/media/VRCNHS_STUDENT_TEMPLATE.xlsx')
+        existing_wb = load_workbook(template_path)
+        sheet = existing_wb.active
 
-    response = HttpResponse(dataset.export(
-        'xlsx'), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="students.xlsx"'
-    return response
+        # Clear existing data in the template
+        for row in sheet.iter_rows(min_row=2, min_col=2, max_row=sheet.max_row, max_col=sheet.max_column):
+            for cell in row:
+                cell.value = None
+
+        start_row = 2
+        start_column = 2
+
+        # NamedStyle for date formatting
+        date_style = NamedStyle(name='date_style', number_format='MM-DD-YYYY')
+
+        # Define the list representing the order of columns in the Excel file
+        excel_columns_order = [
+            'LRN', 'last_name', 'first_name', 'middle_name', 'suffix_name', 'status', 'birthday',
+            'religion', 'other_religion', 'strand', 'age', 'sem', 'classroom', 'sex',
+            'birth_place', 'mother_tongue', 'address', 'father_name', 'father_contact', 'mother_name',
+            'mother_contact', 'guardian_name', 'guardian_contact', 'transfer_status', 'household_income',
+            'is_returnee', 'is_dropout', 'is_working_student', 'health_bmi', 'general_average',
+            'is_4ps', 'notes',
+            '',  # Blank column
+            '',
+            # Grade 7
+            'g7_school', 'g7_schoolYear', 'g7_section', 'g7_general_average', 'g7_adviser', 'g7_adviserContact',
+            '',  # Blank column
+            # Grade 8
+            'g8_school', 'g8_schoolYear', 'g8_section', 'g8_general_average', 'g8_adviser', 'g8_adviserContact',
+            '',  # Blank column
+            # Grade 9
+            'g9_school', 'g9_schoolYear', 'g9_section', 'g9_general_average', 'g9_adviser', 'g9_adviserContact',
+            '',  # Blank column
+            # Grade 10
+            'g10_school', 'g10_schoolYear', 'g10_section', 'g10_general_average', 'g10_adviser', 'g10_adviserContact',
+            '',  # Blank column
+            # Grade 11
+            'g11_school', 'g11_schoolYear', 'g11_section', 'g11_general_average', 'g11_adviser', 'g11_adviserContact',
+            '',  # Blank column
+            # Grade 12
+            'g12_school', 'g12_schoolYear', 'g12_section', 'g12_general_average', 'g12_adviser', 'g12_adviserContact',
+        ]
+
+        # Loop through each student and write the data to the template
+        for row_num, student in enumerate(students, start_row):
+            for col_num, attribute in enumerate(excel_columns_order, start_column):
+                col_letter = get_column_letter(col_num)
+
+                if attribute == '':
+                    # Skip blank columns
+                    continue
+
+                field_value = getattr(student, attribute, None)
+
+                if attribute in ['health_bmi', 'general_average'] and field_value is not None:
+                    # Ensure health_bmi and general_average are converted to float if they exist
+                    field_value = float(field_value)
+
+                elif attribute == 'birthday' and field_value is not None:
+                    # Export date in MM-DD-YYYY format
+                    field_value = student.birthday.strftime('%m-%d-%Y')
+                    sheet[f"{col_letter}{row_num}"] = field_value
+                    sheet[f"{col_letter}{row_num}"].number_format = 'MM-DD-YYYY'
+                    continue
+
+                elif isinstance(field_value, bool):
+                    # Convert boolean values to Yes/No
+                    field_value = 'Yes' if field_value else 'No'
+
+                elif field_value is not None:
+                    field_value = str(field_value)
+
+                else:
+                    field_value = ""
+
+                sheet[f"{col_letter}{row_num}"] = field_value
+
+        # Create an HTTP response to allow the user to download the Excel file
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=students_data_updated.xlsx'
+        existing_wb.save(response)
+
+        messages.success(request, "Data successfully exported to Excel!")
+        return response
+
+    except Exception as e:
+        # Handle any exceptions that may occur during export
+        print(f"Error exporting data to Excel: {str(e)}")
+        messages.error(
+            request, "An error occurred while exporting data to Excel. Please try again.")
+
+    return redirect('students')
