@@ -1,6 +1,7 @@
+from io import BytesIO
 import os
 from django.db import IntegrityError
-from django.http import HttpResponse
+from django.http import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from openpyxl import load_workbook
@@ -17,6 +18,22 @@ import datetime
 from django.contrib.auth.models import Group
 from classrooms.models import Classroom
 from django.core.exceptions import PermissionDenied
+
+
+def download_template(request):
+    # Logic to serve the download link for the template file
+    existing_wb = load_workbook(
+        'SIMS/static/media/VRCNHS_STUDENT_TEMPLATE(CLEAR).xlsx')
+
+    # Save the workbook to a BytesIO buffer
+    buffer = BytesIO()
+    existing_wb.save(buffer)
+    buffer.seek(0)
+
+    response = FileResponse(buffer, as_attachment=True,
+                            filename='Students_Template.xlsx')
+
+    return response
 
 
 def import_students(request):
