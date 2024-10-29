@@ -1,7 +1,7 @@
 import os
 from django.db import IntegrityError
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from openpyxl import load_workbook
 from tablib import Dataset
@@ -9,6 +9,7 @@ from dateutil import parser as date_parser
 import tablib
 from openpyxl.styles import NamedStyle
 from openpyxl.utils import get_column_letter
+from accounts.models import Teacher
 from students.models import Student
 from classrooms.models import Classroom
 import datetime
@@ -305,3 +306,102 @@ def export_students_to_excel(request):
             request, "An error occurred while exporting data to Excel. Please try again.")
 
     return redirect('students')
+
+
+def export_classroom_students_to_excel(request):
+    try:
+        # Ensure the user is under the TEACHER group
+        if request.user.groups.filter(name='TEACHER').exists():
+            # Get the teacher instance and assigned classroom
+            teacher = get_object_or_404(Teacher, user=request.user)
+            classroom = get_object_or_404(Classroom, teacher=teacher)
+
+            # Get students belonging to the classroom
+            students = Student.objects.filter(classroom=classroom)
+
+            # Load the Excel template workbook
+            template_path = 'SIMS/static/media/VRCNHS_STUDENT_TEMPLATE.xlsx'
+            existing_wb = load_workbook(template_path)
+            sheet = existing_wb.active
+
+            # Clear existing data from the sheet
+            for row in sheet.iter_rows(min_row=2, min_col=2, max_row=sheet.max_row, max_col=sheet.max_column):
+                for cell in row:
+                    cell.value = None
+
+            # Start row and column positions for populating student data
+            start_row = 2
+            start_column = 2
+
+            # Define the order of columns in the Excel file as per the Student model
+            excel_columns_order = [
+                'LRN', 'last_name', 'first_name', 'middle_name', 'suffix_name', 'status', 'birthday',
+                'religion', 'other_religion', 'strand', 'age', 'sem', 'classroom', 'sex', 'birth_place',
+                'mother_tongue', 'address', 'father_name', 'father_contact', 'mother_name', 'mother_contact',
+                'guardian_name', 'guardian_contact', 'transfer_status', 'household_income', 'health_bmi',
+                'general_average', 'is_working_student', 'is_returnee', 'is_dropout', 'is_4ps', 'notes',
+                '',  # Blank column
+                '',
+                # Grade 7
+                'g7_school', 'g7_schoolYear', 'g7_section', 'g7_general_average', 'g7_adviser', 'g7_adviserContact',
+                '',  # Blank column
+                # Grade 8
+                'g8_school', 'g8_schoolYear', 'g8_section', 'g8_general_average', 'g8_adviser', 'g8_adviserContact',
+                '',  # Blank column
+                # Grade 9
+                'g9_school', 'g9_schoolYear', 'g9_section', 'g9_general_average', 'g9_adviser', 'g9_adviserContact',
+                '',  # Blank column
+                # Grade 10
+                'g10_school', 'g10_schoolYear', 'g10_section', 'g10_general_average', 'g10_adviser', 'g10_adviserContact',
+                '',  # Blank column
+                # Grade 11
+                'g11_school', 'g11_schoolYear', 'g11_section', 'g11_general_average', 'g11_adviser', 'g11_adviserContact',
+                '',  # Blank column
+                # Grade 12
+                'g12_school', 'g12_schoolYear', 'g12_section', 'g12_general_average', 'g12_adviser', 'g12_adviserContact',
+            ]
+
+            # Write student data to the Excel sheet
+            for row_num, student in enumerate(students, start_row):
+                for col_num, attribute in enumerate(excel_columns_order, start_column):
+                    col_letter = get_column_letter(col_num)
+
+                    if attribute == '':
+                        # Skip blank columns
+                        continue
+
+                    # Extract field value based on attribute
+                    field_value = getattr(student, attribute, None)
+
+                    # Handle specific attributes like classroom or gradelevel
+                    if attribute == 'classroom':
+                        field_value = student.classroom.classroom if student.classroom else ''
+                    elif attribute == 'birthday' and field_value:
+                        # Format birthday in MM-DD-YYYY format
+                        field_value = field_value.strftime('%m-%d-%Y')
+
+                    # Set value in the cell
+                    sheet[f"{col_letter}{row_num}"] = field_value
+
+            # Create HTTP response with the generated Excel file
+            response = HttpResponse(
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=classroom_students_data.xlsx'
+            existing_wb.save(response)
+
+            messages.success(
+                request, "Classroom data successfully exported to Excel!")
+
+            return response
+
+        else:
+            messages.error(
+                request, "You are not authorized to export classroom data.")
+            return redirect('teacher_page')
+
+    except Exception as e:
+        print(f"Error exporting classroom data to Excel: {str(e)}")
+        messages.error(
+            request, "An error occurred while exporting classroom data to Excel. Please try again.")
+
+    return redirect('teacher_page')
