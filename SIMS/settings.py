@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'import_export.apps.ImportExportConfig',
     'accounts.apps.AccountsConfig',
     'students.apps.StudentsConfig',
     'classrooms.apps.ClassroomsConfig',

@@ -93,11 +93,12 @@
 
                 <!-- Card 2 -->
                 <div class="card">
-                    <h1 class="dynamic-text"><b>Import Students</b></h1>
+                    {% comment %} <h1 class="dynamic-text"><b>Import Students</b></h1>
                     <!-- IMPORT -->
                     <h6>Import students using Excel (.xlsx) files. Please use <a href="#" download>This Template</a> before uploading below.</h6>
-                    {% comment %} action = '{% url 'import_students' %}' {% endcomment %}
-                    <form method="post" enctype="multipart/form-data" action="#">
+                    <small class="form-text text-muted">Please use the template provided and make sure all required fields are filled correctly.</small>
+                    {% comment %} 
+                                        <form method="post" action = "{% url 'import_students' %}" enctype="multipart/form-data" action="#">
                         {% csrf_token %}
                         <div class="custom-file">
                             
@@ -106,6 +107,19 @@
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         <br>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form> {% endcomment %}
+
+                    <!-- IMPORT -->
+                    <h6>IMPORT STUDENTS using Excel (.xlsx) files. Please use <a href="#" download>This Template.</a></h6>
+                    <form method="post" action="{% url 'import_students' %}" enctype="multipart/form-data" >
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Upload Excel File of Students:</label>
+                            <div class="file-upload-wrapper">
+                                <input class="form-control" type="file" name="myfile" id="formFile" required>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Upload</button>
                     </form>

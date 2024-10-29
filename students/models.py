@@ -5,7 +5,7 @@ from classrooms.models import Classroom
 
 
 class Student(models.Model):
-    LRN = models.IntegerField(primary_key=True)
+    LRN = models.BigIntegerField(primary_key=True)
     last_name = models.CharField(max_length=30)
     first_name = models.CharField(max_length=30)
     middle_name = models.CharField(max_length=30, blank=True, null=True)
