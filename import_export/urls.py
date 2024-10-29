@@ -9,6 +9,7 @@ urlpatterns = [
     path('export_students/', views.export_students_to_excel, name='export_students'),
     path('export_classroom_students/', views.export_classroom_students_to_excel,
          name='export_classroom_students'),
-
+    path('export_and_delete_students_for_departure/', views.export_and_delete_students_for_departure,
+         name='export_and_delete_students_for_departure'),
 
 ]

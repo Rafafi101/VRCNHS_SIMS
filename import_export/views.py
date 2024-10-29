@@ -14,6 +14,7 @@ from accounts.models import Teacher
 from students.models import Student
 from classrooms.models import Classroom
 import datetime
+from django.db.models import Q
 
 from django.contrib.auth.models import Group
 from classrooms.models import Classroom
@@ -422,3 +423,106 @@ def export_classroom_students_to_excel(request):
             request, "An error occurred while exporting classroom data to Excel. Please try again.")
 
     return redirect('teacher_page')
+
+
+def export_and_delete_students_for_departure(request):
+    try:
+        # Retrieve students for departure
+        students_for_departure = Student.objects.filter(
+            Q(status='For Graduation') | Q(
+                status='For Dropout') | Q(status='For Transfer'),
+        )
+
+        # Load the template workbook
+        template_path = 'SIMS/static/media/VRCNHS_STUDENT_TEMPLATE.xlsx'
+        existing_wb = load_workbook(template_path)
+        sheet = existing_wb.active
+
+        # Clear existing data
+        for row in sheet.iter_rows(min_row=2, min_col=2, max_row=sheet.max_row, max_col=sheet.max_column):
+            for cell in row:
+                cell.value = None
+
+        start_row = 2
+        start_column = 2
+
+        date_style = NamedStyle(name='date_style', number_format='MM-DD-YYYY')
+
+        # Define a list representing the order of columns in the Excel file
+        excel_columns_order = [
+            'LRN', 'last_name', 'first_name', 'middle_name', 'suffix_name', 'status', 'birthday',
+            'religion', 'other_religion', 'strand', 'age', 'sem', 'classroom', 'sex',
+            'birth_place', 'mother_tongue', 'address', 'father_name', 'father_contact', 'mother_name',
+            'mother_contact', 'guardian_name', 'guardian_contact', 'transfer_status', 'household_income',
+            'is_returnee', 'is_dropout', 'is_working_student', 'health_bmi', 'general_average',
+            'is_4ps', 'notes',
+            '',  # Blank column
+            '',
+            # Grade 7
+            'g7_school', 'g7_schoolYear', 'g7_section', 'g7_general_average', 'g7_adviser', 'g7_adviserContact',
+            '',  # Blank column
+            # Grade 8
+            'g8_school', 'g8_schoolYear', 'g8_section', 'g8_general_average', 'g8_adviser', 'g8_adviserContact',
+            '',  # Blank column
+            # Grade 9
+            'g9_school', 'g9_schoolYear', 'g9_section', 'g9_general_average', 'g9_adviser', 'g9_adviserContact',
+            '',  # Blank column
+            # Grade 10
+            'g10_school', 'g10_schoolYear', 'g10_section', 'g10_general_average', 'g10_adviser', 'g10_adviserContact',
+            '',  # Blank column
+            # Grade 11
+            'g11_school', 'g11_schoolYear', 'g11_section', 'g11_general_average', 'g11_adviser', 'g11_adviserContact',
+            '',  # Blank column
+            # Grade 12
+            'g12_school', 'g12_schoolYear', 'g12_section', 'g12_general_average', 'g12_adviser', 'g12_adviserContact',
+        ]
+
+        for row_num, student in enumerate(students_for_departure, start_row):
+            for col_num, attribute in enumerate(excel_columns_order, start_column):
+                col_letter = get_column_letter(col_num)
+
+                if attribute == '':
+                    # Skip blank columns
+                    continue
+
+                field_value = getattr(student, attribute, None)
+
+                if attribute in ['LRN',]:
+                    if field_value is not None:
+                        field_value = int(field_value)
+                elif attribute in ['health_bmi', 'general_average']:
+                    if field_value is not None:
+                        field_value = float(field_value)
+                elif attribute == 'birthday':
+                    # Export date in MM-DD-YYYY format
+                    field_value = student.birthday.strftime(
+                        '%m-%d-%Y') if student.birthday else None
+                    sheet[f"{col_letter}{row_num}"] = field_value
+                    sheet[f"{col_letter}{row_num}"].number_format = 'MM-DD-YYYY'
+                else:
+                    if field_value is not None:
+                        field_value = str(field_value)
+                    else:
+                        field_value = ""
+
+                sheet[f"{col_letter}{row_num}"] = field_value
+
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=students_for_departure.xlsx'
+        existing_wb.save(response)
+
+        # Delete students after successful export
+        students_for_departure.delete()
+
+        messages.success(
+            request, "Data successfully exported to Excel and students deleted!")
+
+        return response
+
+    except Exception as e:
+        print(f"Error exporting data to Excel: {str(e)}")
+        messages.error(
+            request, "An error occurred while exporting data to Excel. Please try again.")
+        # Redirect to sectioning page in case of an error
+        return redirect('sectioning')
