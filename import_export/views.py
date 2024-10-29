@@ -13,6 +13,10 @@ from students.models import Student
 from classrooms.models import Classroom
 import datetime
 
+from django.contrib.auth.models import Group
+from classrooms.models import Classroom
+from django.core.exceptions import PermissionDenied
+
 
 def import_students(request):
     if request.method == 'POST':
@@ -22,12 +26,29 @@ def import_students(request):
         # Check if the uploaded file is an Excel file
         if not new_student_file.name.endswith('xlsx'):
             messages.error(request, 'Please upload an Excel file only (.xlsx)')
-            return redirect('import_students')
+            if request.user.groups.filter(name='TEACHER').exists():
+                return redirect('teacher_page')
+            else:
+                return redirect('students')
 
         try:
             imported_data = dataset.load(
                 new_student_file.read(), format='xlsx')
             successfully_imported = 0
+
+            # Get the user's assigned classroom if they are in the TEACHER group
+            if request.user.groups.filter(name='TEACHER').exists():
+                if hasattr(request.user, 'teacher_profile'):
+                    teacher = request.user.teacher_profile
+                    teacher_classroom = Classroom.objects.filter(
+                        teacher=teacher).first()
+                    if not teacher_classroom:
+                        messages.error(
+                            request, 'You do not have an assigned classroom to import students into.')
+                        return redirect('teachers_page')
+                else:
+                    messages.error(request, 'Teacher profile not found.')
+                    return redirect('teachers_page')
 
             # Loop over each row in the dataset
             for i, data in enumerate(imported_data, start=1):
@@ -44,13 +65,19 @@ def import_students(request):
                         raise ValueError(
                             f"Row {i}: Classroom Identifier is None. Stopping further processing.")
 
+                    # Get the classroom instance
                     try:
-                        # Get the classroom instance
                         classroom_instance = Classroom.objects.get(
                             classroom=classroom_identifier)
                     except Classroom.DoesNotExist:
                         raise ValueError(f"Row {i}: Classroom with identifier {
                                          classroom_identifier} does not exist.")
+
+                    # For teachers, ensure they only import students into their assigned classroom
+                    if request.user.groups.filter(name='TEACHER').exists():
+                        if classroom_instance != teacher_classroom:
+                            raise ValueError(
+                                f"Row {i}: You are only allowed to import students into your assigned classroom.")
 
                     # Handle birthday conversion
                     if isinstance(data[7], datetime.datetime):
@@ -75,7 +102,6 @@ def import_students(request):
                         religion=data[8],
                         other_religion=data[9],
                         strand=data[10],
-                        # Optional, check if empty
                         age=data[11] if data[11] else None,
                         sem=data[12],
                         classroom=classroom_instance,
@@ -91,16 +117,13 @@ def import_students(request):
                         guardian_contact=data[24],
                         transfer_status=data[25],
                         household_income=data[26],
-                        # Optional field
                         health_bmi=data[27] if data[27] else None,
-                        # Optional field
                         general_average=data[28] if data[28] else None,
                         is_working_student=bool(data[29]),
                         is_returnee=bool(data[30]),
                         is_dropout=bool(data[31]),
                         is_4ps=bool(data[32]),
                         notes=data[33],
-                        # Grade 7-12 history
                         g7_school=data[36],
                         g7_schoolYear=data[37],
                         g7_section=data[38],
@@ -145,39 +168,38 @@ def import_students(request):
                     print(f"Row {i}: Successfully imported student:", student)
 
                 except ValueError as ve:
-                    # Log and display validation errors
                     error_message = f"Row {i}: {str(ve)}"
                     print(error_message)
                     messages.error(request, error_message)
                     break
 
                 except IntegrityError as ie:
-                    # Catch database-related errors like duplicate LRNs
                     error_message = f"Row {i}: Integrity error - {str(ie)}"
                     print(error_message)
                     messages.error(request, error_message)
                     break
 
                 except Exception as e:
-                    # Catch all other exceptions and continue processing the next student
                     error_message = f"Row {
                         i}: Error saving student data: {str(e)}"
                     print(error_message)
                     messages.error(request, error_message)
                     continue
 
-            # Display a success message if students were imported successfully
             if successfully_imported > 0:
                 messages.success(request, f"Successfully imported {
                                  successfully_imported} student(s) into the database.")
 
         except Exception as e:
-            # If there's an error during the file load, log and display it
             print(f"Error loading student/s from the file: {str(e)}")
             messages.error(
                 request, f"Error loading students from the file: {str(e)}")
 
-        return redirect('students')
+        # Redirect to different pages depending on user group
+        if request.user.groups.filter(name='TEACHER').exists():
+            return redirect('teacher_page')
+        else:
+            return redirect('students')
 
     return render(request, 'students')
 

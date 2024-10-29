@@ -95,7 +95,7 @@
             <div class="unique-card">
                 <h1 class="unique-dynamic-text"><b>Import Students</b></h1>
                 <p class="unique-card-description">Import students using Excel (.xlsx) files. Please use <a href="#" download>This Template</a> before uploading below.</p>
-                <form method="post" enctype="multipart/form-data" action="#">
+                <form method="post" action="{% url 'import_students' %}" enctype="multipart/form-data" >
                     {% csrf_token %}
                     <div class="unique-custom-file">
                         <input type="file" class="unique-custom-file-input" id="customFile" name="myfile" required>
