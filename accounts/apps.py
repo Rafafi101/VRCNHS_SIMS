@@ -10,7 +10,14 @@ class AccountsConfig(AppConfig):
 
     def ready(self):
         import accounts.signals  # Import signals to ensure they are registered
+        from django.contrib.auth.models import Group
+        from django.db.models.signals import post_migrate
 
-        # Create "ADMIN" and "TEACHER" groups when the app starts
-        Group.objects.get_or_create(name='ADMIN')
-        Group.objects.get_or_create(name='TEACHER')
+        # Connect the post_migrate signal to create groups after migrations are complete
+        post_migrate.connect(create_groups, sender=self)
+
+
+def create_groups(sender, **kwargs):
+    # Create the ADMIN and TEACHER groups if they don't exist
+    Group.objects.get_or_create(name='ADMIN')
+    Group.objects.get_or_create(name='TEACHER')
