@@ -1,6 +1,6 @@
 from django.db.models.signals import post_migrate
-from .models import Gradelevel, Classroom
 from django.dispatch import receiver
+from .models import Gradelevel, Classroom
 
 
 @receiver(post_migrate)
@@ -20,7 +20,7 @@ def populate_gradelevels_and_classrooms(sender, **kwargs):
 
         for gradelevel in gradelevels:
             # Create or get gradelevel
-            grade_obj, created = Gradelevel.objects.get_or_create(
+            grade_obj, _ = Gradelevel.objects.get_or_create(
                 gradelevel=gradelevel)
 
             # Create classrooms for the gradelevel
