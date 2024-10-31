@@ -87,12 +87,8 @@ WSGI_APPLICATION = 'SIMS.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'simsdb',
-        'USER': 'postgres',
-        'PASSWORD': 'SmartPostGreMan_97',
-        'HOST': 'localhost',
-        'PORT': '5433',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -149,7 +145,3 @@ MESSAGE_TAGS = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-# settings.py
-RECAPTCHA_PUBLIC_KEY = 'django-insecure-n1r+hq8164bez_51knr+168^ycl@#wh9wfbx2n2_l1m2fmfyci'
-RECAPTCHA_PRIVATE_KEY = 'django-insecure-n1r+hq8164bez_51knr+168^ycl@#wh9wfbx2n2_l1m2fmfyciy'
