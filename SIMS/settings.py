@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-n1r+hq8164bez_51knr+168^ycl@#wh9wfbx2n2_l1m2fmfyci
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -131,7 +131,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'SIMS/static')
@@ -153,8 +153,3 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # settings.py
 RECAPTCHA_PUBLIC_KEY = 'django-insecure-n1r+hq8164bez_51knr+168^ycl@#wh9wfbx2n2_l1m2fmfyci'
 RECAPTCHA_PRIVATE_KEY = 'django-insecure-n1r+hq8164bez_51knr+168^ycl@#wh9wfbx2n2_l1m2fmfyciy'
-
-try:
-    from .local_settings import *
-except ImportError:
-    pass
