@@ -78,54 +78,58 @@
     <br>
 
     <!-- This is where the basic commands are -->
-    <section>
-        <div class="unique-card-container">
-            <!-- Card 1 -->
-            <div class="unique-card">
-                <h1 class="unique-dynamic-text"><b>Create Student</b></h1>
-                <p class="unique-card-description">You may manually add a student here.</p>
-                <form action="{% url 'add_student' %}" method="get">
-                    <button type="submit" class="unique-btn-primary">
-                        Add Student
+    {% if classroom_name %}
+        <section>
+            <div class="unique-card-container">
+                <!-- Card 1 -->
+                <div class="unique-card">
+                    <h1 class="unique-dynamic-text"><b>Create Student</b></h1>
+                    <p class="unique-card-description">You may manually add a student here.</p>
+                    <form action="{% url 'add_student' %}" method="get">
+                        <button type="submit" class="unique-btn-primary">
+                            Add Student
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="unique-card">
+                    <h1 class="unique-dynamic-text"><b>Import Students</b></h1>
+                    <p class="unique-card-description">Import students using Excel (.xlsx) files. Please use <a href="{% url 'download_template' %}" download>This Template</a> before uploading below.</p>
+                    <form method="post" action="{% url 'import_students' %}" enctype="multipart/form-data" >
+                        {% csrf_token %}
+                        <div class="unique-custom-file">
+                            <input type="file" class="unique-custom-file-input" id="customFile" name="myfile" required>
+                            <small class="form-text text-muted">Please use the template provided and make sure all required fields are filled correctly.</small>
+                            <button type="submit" class="unique-btn-primary mt-3">Upload</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="unique-card">
+                    <h1 class="unique-dynamic-text"><b>Export all Students</b></h1>
+                    <p class="unique-card-description">EXPORT STUDENTS in your classroom using Excel (.xlsx) files for your own local backup.</p>
+                    <a href="{% url 'export_classroom_students' %}">
+                        <button type="button" class="unique-export-button">
+                            EXPORT
+                        </button>
+                    </a>
+                </div>
+
+                <!-- Card 4 (Bulk Promote) -->
+                <div class="unique-card">
+                    <h1 class="unique-dynamic-text"><b>Bulk Promote Students</b></h1>
+                    <p class="unique-card-description">Promote all students from your classroom to the next grade level in bulk.</p>
+                    <button type="button" class="unique-btn-success" data-toggle="modal" data-target="#bulkPromoteModal">
+                        Promote Students
                     </button>
-                </form>
+                </div>
             </div>
-
-            <!-- Card 2 -->
-            <div class="unique-card">
-                <h1 class="unique-dynamic-text"><b>Import Students</b></h1>
-                <p class="unique-card-description">Import students using Excel (.xlsx) files. Please use <a href="{% url 'download_template' %}" download>This Template</a> before uploading below.</p>
-                <form method="post" action="{% url 'import_students' %}" enctype="multipart/form-data" >
-                    {% csrf_token %}
-                    <div class="unique-custom-file">
-                        <input type="file" class="unique-custom-file-input" id="customFile" name="myfile" required>
-                        <small class="form-text text-muted">Please use the template provided and make sure all required fields are filled correctly.</small>
-                        <button type="submit" class="unique-btn-primary mt-3">Upload</button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="unique-card">
-                <h1 class="unique-dynamic-text"><b>Export all Students</b></h1>
-                <p class="unique-card-description">EXPORT STUDENTS in your classroom using Excel (.xlsx) files for your own local backup.</p>
-                <a href="{% url 'export_classroom_students' %}">
-                    <button type="button" class="unique-export-button">
-                        EXPORT
-                    </button>
-                </a>
-            </div>
-
-            <!-- Card 4 (Bulk Promote) -->
-            <div class="unique-card">
-                <h1 class="unique-dynamic-text"><b>Bulk Promote Students</b></h1>
-                <p class="unique-card-description">Promote all students from your classroom to the next grade level in bulk.</p>
-                <button type="button" class="unique-btn-success" data-toggle="modal" data-target="#bulkPromoteModal">
-                    Promote Students
-                </button>
-            </div>
-        </div>
-    </section>
+        </section>
+    {% else %}
+        <h1 style="color: red;">WAITING FOR ADMIN TO ASSIGN A CLASSROOM FOR YOU</h1>
+    {% endif %}
 
     <!-- Bulk Promote Modal Confirmation -->
     <div class="modal fade" id="bulkPromoteModal" tabindex="-1" aria-labelledby="bulkPromoteLabel" aria-hidden="true">
