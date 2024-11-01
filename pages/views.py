@@ -47,7 +47,6 @@ def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, 
 # Homepage
 
 
-@login_required(login_url='login')  # Redirects to login if unauthenticated
 def index(request):
     # Redirect to teacher page if the user is in the TEACHER group
     if request.user.groups.filter(name='TEACHER').exists():
@@ -92,7 +91,10 @@ def index(request):
 
     current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     total_teachers = Teacher.objects.count()
-    total_classrooms = Classroom.objects.count()
+    total_classrooms = Classroom.objects.exclude(
+        Q(name='SECTIONING') | (
+            Q(gradelevel__grade='Grade 12') & Q(name='FOR DEPARTURE'))
+    ).count()
 
     # Add variables to context dictionary
     context = {
