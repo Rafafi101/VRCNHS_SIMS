@@ -94,7 +94,7 @@ def index(request):
     total_teachers = Teacher.objects.count()
     total_classrooms = Classroom.objects.exclude(
         Q(classroom='SECTIONING') | (
-            Q(gradelevel__grade='Grade 12') & Q(classroom='FOR DEPARTURE'))
+            Q(gradelevel__gradelevel='Grade 12') & Q(classroom='FOR DEPARTURE'))
     ).count()
 
     # Add variables to context dictionary
