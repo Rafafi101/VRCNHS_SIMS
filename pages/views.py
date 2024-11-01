@@ -92,8 +92,8 @@ def index(request):
     current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     total_teachers = Teacher.objects.count()
     total_classrooms = Classroom.objects.exclude(
-        Q(name='SECTIONING') | (
-            Q(gradelevel__grade='Grade 12') & Q(name='FOR DEPARTURE'))
+        Q(classroom__classroom='SECTIONING') | (
+            Q(gradelevel__grade='Grade 12') & Q(classroom__classroom='FOR DEPARTURE'))
     ).count()
 
     # Add variables to context dictionary
