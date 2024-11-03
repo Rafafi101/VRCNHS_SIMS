@@ -131,12 +131,15 @@ def delete_teacher(request, teacher_id):
 
     # Check if the user has permission to delete the teacher
     if request.user.has_perm('delete_teacher', teacher):
-        teacher.delete()
-        messages.error(request, "Teacher Deleted", extra_tags='danger')
+        # Delete the associated user
+        user = teacher.user  # Access the related user
+        teacher.delete()  # Delete the Teacher instance
+        user.delete()  # Delete the User instance
+        messages.error(
+            request, "Teacher and associated user deleted", extra_tags='danger')
         return redirect("teachers")
     else:
         # Handle unauthorized access (optional)
-        # Create an unauthorized_access.html template
         return HttpResponse("Unauthorized access")
 
 
