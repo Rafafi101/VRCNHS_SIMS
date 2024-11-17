@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from dotenv import load_dotenv
 import os
 import sys
 import dj_database_url
@@ -86,35 +85,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SIMS.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-
-# Load environment variables from a .env file
-load_dotenv()
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Detect if the app is running in development mode
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
-if DEVELOPMENT_MODE:
-    # PostgreSQL for local development
+if DEVELOPMENT_MODE is True:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'simsdb',
-            'USER': 'postgres',
-            'PASSWORD': 'SmartPostGreMan_97',
-            'HOST': 'localhost',
-            'PORT': '5433',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
         }
     }
-else:
-    # Production database (PostgreSQL on DigitalOcean)
+elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
     if os.getenv("DATABASE_URL", None) is None:
         raise Exception("DATABASE_URL environment variable not defined")
-    import dj_database_url
     DATABASES = {
         "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
     }
